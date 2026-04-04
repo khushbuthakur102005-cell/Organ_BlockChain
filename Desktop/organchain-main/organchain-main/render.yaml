@@ -1,0 +1,39 @@
+services:
+  # 1. Flask ML Microservice
+  - type: web
+    name: organchain-ai
+    env: python
+    buildCommand: "pip install -r requirements.txt && pip install gunicorn"
+    startCommand: "gunicorn app:app -b 0.0.0.0:$PORT"
+    rootDir: ml-service
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+
+  # 2. Spring Boot Backend
+  - type: web
+    name: organchain-backend
+    env: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: FLASK_AI_URL
+        value: "https://organchain-ai.onrender.com"
+      - key: PINATA_JWT
+        sync: false
+      - key: WEB3_RPC_URL
+        value: "https://eth-sepolia.g.alchemy.com/v2/YOUR_ALCHEMY_KEY"
+
+  # 3. Frontend Static Site
+  - type: web
+    name: organchain-frontend
+    env: docker
+    plan: free
+    dockerfilePath: ./TransplantChain-Organ_Donation_Application-main/Dockerfile
+    rootDir: TransplantChain-Organ_Donation_Application-main
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_OPTIONS
+        value: "--openssl-legacy-provider"

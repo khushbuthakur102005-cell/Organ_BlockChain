@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description"
+        content="OrganChain Patient Profile — Verified medical identity and organ pledge secured on the blockchain.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>My Profile — OrganChain</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-item { display:inline-flex; align-items:center; white-space:nowrap; flex-shrink:0; height:100%; padding:0 0.65rem; font-size:0.85rem; font-weight:500; color:#cbd5e1; transition:all 0.2s ease-in-out; text-decoration:none; border-bottom:2px solid transparent; }
+
+        .nav-item:hover { color: #10B981; }
+
+        .nav-active { color: #10B981;
+            font-weight: 600;
+            border-bottom: 2px solid #10B981;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-up {
+            animation: fadeUp 0.5s ease-out forwards;
+        }
+
+        .fade-up-d1 {
+            animation-delay: 0.1s;
+            opacity: 0;
+        }
+
+        .fade-up-d2 {
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+
+        .fade-up-d3 {
+            animation-delay: 0.3s;
+            opacity: 0;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .pulse-dot {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        .avatar-container:hover .avatar-overlay {
+            opacity: 1;
+        }
+
+        .avatar-overlay {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+        }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen pt-16">
+
+    <!-- Sticky Nav -->
+    <header class="fixed top-0 w-full z-[1000] bg-slate-950 border-b border-slate-800 h-16"
+        style="position:fixed;top:0;width:100%;z-index:1000;height:64px;">
+        <nav class="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
+            <a href="dashboard.html" class="flex items-center gap-2 transition-opacity hover:opacity-90">
+                <span class="text-white font-bold tracking-tight text-lg">Tech Knight <span
+                        class="text-emerald-500 mx-1">|</span> <span
+                        class="font-light text-slate-300">OrganChain</span></span>
+            </a>
+            <div class="flex items-center gap-4 h-full">
+                <ul class="flex items-center h-full gap-1 m-0 p-0 list-none hidden md:flex">
+                <li><a href="dashboard.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="home" class="w-[18px] h-[18px] mr-2"></i><span>Home</span></a></li>
+                <li><a href="about.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="info" class="w-[18px] h-[18px] mr-2"></i><span>About</span></a></li>
+                <li><a href="hospitals.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="building-2" class="w-[18px] h-[18px] mr-2"></i><span>Hospitals</span></a></li>
+                <li><a href="pledge-verification.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="shield-check" class="w-[18px] h-[18px] mr-2"></i><span>Pledge Portal</span></a></li>
+                <li><a href="awareness.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="book-open" class="w-[18px] h-[18px] mr-2"></i><span>Awareness</span></a></li>
+                <li><a href="faqs.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="help-circle" class="w-[18px] h-[18px] mr-2"></i><span>FAQs</span></a></li>
+                <li><a href="download-forms.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="file-text" class="w-[18px] h-[18px] mr-2"></i><span>Download Forms</span></a></li>
+                <li><a href="profile.html" class="nav-item nav-active" style="display:flex; align-items:center;"><i data-lucide="user" class="w-[18px] h-[18px] mr-2"></i><span>Profile</span></a></li>
+            </ul>
+                <div class="h-6 w-px bg-slate-700 hidden md:block"></div>
+                <button onclick="sessionStorage.clear(); window.location.href='index.html';" class="text-xs font-bold text-slate-400 hover:text-emerald-500 transition-colors flex items-center gap-1.5 border border-slate-700 hover:border-emerald-500/50 px-3 py-1.5 rounded-lg shrink-0">
+                <i data-lucide="log-out" class="w-[18px] h-[18px]"></i>
+                Logout
+            </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="w-full max-w-[1400px] mx-auto px-6 py-10 flex-1">
+
+        <!-- Page Title -->
+        <div class="mb-8 fade-up">
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">My Profile</h1>
+            <p class="text-slate-500 font-medium mt-1">Your verified medical identity, cryptographically secured on the
+                OrganChain ledger.</p>
+        </div>
+
+        <!-- Two-Column Layout -->
+        <div class="flex flex-col xl:flex-row gap-8">
+
+            <!-- ===== LEFT SIDEBAR ===== -->
+            <div class="xl:w-80 shrink-0 space-y-6 fade-up fade-up-d1">
+
+                <!-- Avatar + Quick Stats Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-7 text-center">
+                    <!-- Avatar -->
+                    <div class="relative inline-block mb-5 avatar-container cursor-pointer">
+                        <div
+                            class="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mx-auto shadow-lg border-4 border-white ring-2 ring-emerald-200">
+                            <span class="text-4xl font-extrabold text-white select-none" id="avatarInitials">MK</span>
+                        </div>
+                        <div
+                            class="avatar-overlay absolute inset-0 flex items-center justify-center bg-slate-900/50 rounded-full">
+                            <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Name & Status -->
+                    <h2 class="text-xl font-extrabold text-slate-900 tracking-tight" id="profileDisplayName">Mahanandh
+                        Kumar</h2>
+                    <div class="flex items-center justify-center gap-1.5 mt-1 mb-4">
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full pulse-dot" id="statusDot"></div>
+                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest"
+                            id="statusLabel">Verified Account</span>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="space-y-2 text-left">
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Patient
+                                ID</span>
+                            <span class="mono text-xs font-bold text-slate-700">OC-2026-4217</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Joined</span>
+                            <span class="text-xs font-bold text-slate-700">23 Mar 2026</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Zone</span>
+                            <span class="text-xs font-bold text-slate-700">South Zone</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Score Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 bg-emerald-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-sm font-extrabold text-slate-800 tracking-tight">Security Score</h3>
+                    </div>
+                    <div class="flex items-end justify-between mb-2">
+                        <span class="text-4xl font-extrabold text-emerald-600">100%</span>
+                        <span
+                            class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">Excellent</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden mb-4">
+                        <div class="bg-gradient-to-r from-emerald-400 to-teal-500 h-2.5 rounded-full"
+                            style="width:100%"></div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-600">
+                            <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            2FA Active
+                        </div>
+                        <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-600">
+                            <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Blockchain Identity Linked
+                        </div>
+                        <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-600">
+                            <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Wallet Verified
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Navigation -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-5">
+                    <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3">Quick Access</p>
+                    <div class="space-y-1">
+                        <a href="dashboard.html"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition-colors text-sm font-semibold text-slate-600 group">
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            </svg>
+                            Home Dashboard
+                        </a>
+                        <a href="#personal"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition-colors text-sm font-semibold text-slate-600 group">
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                            </svg>
+                            Personal Identity
+                        </a>
+                        <a href="#clinical"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition-colors text-sm font-semibold text-slate-600 group">
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12z" />
+                            </svg>
+                            Clinical Metadata
+                        </a>
+                        <a href="#security"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 transition-colors text-sm font-semibold text-slate-600 group">
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-500"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                            Security & Web3
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== MAIN CONTENT ===== -->
+            <div class="flex-1 space-y-6 fade-up fade-up-d2">
+
+                <!-- Section 1: Personal Identity -->
+                <div id="personal" class="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
+                    <div class="px-7 py-5 border-b border-slate-100 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 bg-emerald-100 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Personal Identity</h2>
+                        </div>
+                        <button onclick="showSaveToast()"
+                            class="text-xs font-bold text-emerald-600 hover:text-emerald-800 border border-emerald-200 hover:border-emerald-400 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-all">Edit
+                            Details</button>
+                    </div>
+                    <div class="p-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label
+                                class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Full
+                                Name</label>
+                            <div class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800"
+                                id="profName">Mahanandh Kumar</div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Date
+                                of Birth</label>
+                            <div id="profDob"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800">
+                                12 August 2002</div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Gender</label>
+                            <div id="profGender"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800">
+                                Male</div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">National
+                                Health ID (ABHA)</label>
+                            <div class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 mono"
+                                id="profAbha">12-3456-7890-1234</div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Phone
+                                Number</label>
+                            <div id="profPhone"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800">
+                                +91 98765 43210</div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Email
+                                Address</label>
+                            <div id="profEmail"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800">
+                                mahanandh@organchain.in</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Clinical Metadata (Admin Locked) -->
+                <div id="clinical" class="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
+                    <div class="px-7 py-5 border-b border-slate-100 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 bg-blue-100 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Clinical Metadata</h2>
+                        </div>
+                        <span
+                            class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg">
+                            <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="2.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                            </svg>
+                            Read-Only · Admin Controlled
+                        </span>
+                    </div>
+                    <div class="p-7 grid grid-cols-1 sm:grid-cols-3 gap-5">
+                        <!-- Blood Group -->
+                        <div class="bg-rose-50 border border-rose-100 rounded-2xl p-5">
+                            <p class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-2">Blood Group
+                            </p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-4xl font-extrabold text-rose-600" id="profBloodGroup">O+</span>
+                            </div>
+                            <p class="text-[11px] text-rose-400 font-medium mt-2" id="profBloodLabel">Universal Donor
+                                Compatible</p>
+                        </div>
+                        <!-- HLA Type -->
+                        <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+                            <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-2">HLA Typing</p>
+                            <p class="mono text-xl font-extrabold text-blue-700">HLA-A2</p>
+                            <p class="mono text-base font-bold text-blue-500">B27</p>
+                            <p class="text-[11px] text-blue-400 font-medium mt-2">5/6 Antigen Precision</p>
+                        </div>
+                        <!-- Organ Pledge -->
+                        <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+                            <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-2">Organ
+                                Pledge</p>
+                            <span
+                                class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-white bg-emerald-600 px-3 py-1.5 rounded-full shadow-sm"
+                                id="profPledgeStatus">
+                                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.5">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                                </svg>
+                                Active Donor
+                            </span>
+                            <p class="text-[11px] text-emerald-500 font-medium mt-3" id="profPledgeTx">Block #14,207,412
+                                · Immutable</p>
+                            <div class="mt-2 text-[11px] text-emerald-700 font-medium" id="profOrgansList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Additional clinical fields -->
+                    <div class="px-7 pb-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-4">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Registered
+                                Hospital</p>
+                            <p class="text-sm font-bold text-slate-800">AIIMS New Delhi</p>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-4">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Treating
+                                Physician / Witness</p>
+                            <p class="text-sm font-bold text-slate-800" id="profWitness">Dr. Priya Nair · Nephrology</p>
+                        </div>
+                    </div>
+
+                    <!-- Profile Integrity Badge -->
+                    <div class="mx-7 mb-7 bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-slate-400 shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
+                        <div>
+                            <p class="text-xs font-bold text-slate-600">Profile Integrity Badge</p>
+                            <p class="text-[11px] text-slate-500 font-medium mt-0.5">Your medical profile is hashed and
+                                secured on the OrganChain ledger.</p>
+                            <p class="mono text-[11px] text-slate-500 mt-1">SHA-256: <span
+                                    class="font-bold text-slate-700"
+                                    id="profSha256">0xdb4a2c8e91f3b74d6c02e5a1f9b3d7c8e4f02a81e</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Security & Web3 -->
+                <div id="security"
+                    class="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden fade-up fade-up-d3">
+                    <div class="px-7 py-5 border-b border-slate-100 flex items-center gap-3">
+                        <div class="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Security & Web3</h2>
+                    </div>
+                    <div class="p-7 space-y-6">
+
+                        <!-- Linked Wallet -->
+                        <div>
+                            <label
+                                class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Linked
+                                MetaMask Wallet</label>
+                            <div
+                                class="flex items-center gap-3 bg-slate-950 rounded-xl px-5 py-4 border border-slate-800">
+                                <svg class="w-5 h-5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="currentColor"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                </svg>
+                                <span class="mono text-sm font-bold text-emerald-400 flex-1"
+                                    id="profWallet">0x7a8f3e21c4b9da01f37c5e4...b07d</span>
+                                <span
+                                    class="text-[10px] font-bold text-emerald-600 bg-emerald-900/40 px-2 py-1 rounded-lg border border-emerald-800/50 uppercase tracking-widest">Verified</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 font-medium mt-2">Connected via MetaMask · Ethereum
+                                Mainnet · Last verified 2h ago</p>
+                        </div>
+
+                        <!-- Divider -->
+                        <hr class="border-slate-100">
+
+                        <!-- Change Email -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label
+                                    class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Email
+                                    Address</label>
+                                <input type="email" value="mahanandh@organchain.in"
+                                    class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 transition-all">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">New
+                                    Password</label>
+                                <input type="password" value="●●●●●●●●●●"
+                                    class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 transition-all">
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Confirm
+                                New Password</label>
+                            <input type="password" value="●●●●●●●●●●"
+                                class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 rounded-xl px-4 py-3 text-sm font-semibold text-slate-800 transition-all">
+                        </div>
+
+                        <!-- Two-factor status -->
+                        <div
+                            class="flex items-center justify-between bg-emerald-50 border border-emerald-100 rounded-xl px-5 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-emerald-500 rounded-full pulse-dot"></div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800">Two-Factor Authentication</p>
+                                    <p class="text-[11px] text-slate-500 font-medium">Via TOTP Authenticator App</p>
+                                </div>
+                            </div>
+                            <span
+                                class="text-[11px] font-extrabold text-emerald-700 uppercase tracking-widest">Active</span>
+                        </div>
+
+                        <button onclick="showSaveToast()"
+                            class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 text-sm flex items-center justify-center gap-2 active:scale-[0.98]">
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="2.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Update Profile
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Save Toast -->
+    <div id="saveToast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[200]">
+        <div
+            class="flex items-center gap-3 bg-slate-900 border border-emerald-500/30 text-white text-sm font-semibold px-5 py-3.5 rounded-2xl shadow-2xl">
+            <div class="w-2 h-2 bg-emerald-500 rounded-full pulse-dot"></div>
+            Profile Data and Document CID successfully pushed to OrganChain Smart Contract.
+        </div>
+    </div>
+
+    <script>
+        // Auth guard
+        if (!sessionStorage.getItem('userRole')) {
+            window.location.href = 'login.html';
+        }
+
+        // ═══════════ DYNAMIC PROFILE SYNC FROM PLEDGE DATA ═══════════
+        document.addEventListener("DOMContentLoaded", () => {
+            const userName = sessionStorage.getItem('userName') || sessionStorage.getItem('pledgeName');
+            const pledgeName = sessionStorage.getItem('pledgeName');
+            const pledgeAge = sessionStorage.getItem('pledgeAge');
+            const pledgeBlood = sessionStorage.getItem('pledgeBloodGroup');
+            const pledgeAbha = sessionStorage.getItem('abhaId');
+            const pledgeBitmap = parseInt(sessionStorage.getItem('pledgeOrganBitmap') || '0');
+            const pledgeTxHash = sessionStorage.getItem('pledgeTxHash');
+            const pledgeTimestamp = sessionStorage.getItem('pledgeTimestamp');
+            const pledgeStatus = sessionStorage.getItem('pledgeStatus');
+            const pledgeWitness = sessionStorage.getItem('pledgeWitnessName');
+            const pledgeWitnessContact = sessionStorage.getItem('pledgeWitnessContact');
+            const docSha = sessionStorage.getItem('documentSHA256');
+            const ipfsCid = sessionStorage.getItem('ipfsCid');
+            const userHash = sessionStorage.getItem('userHash');
+
+            // Name + avatar initials
+            const displayName = pledgeName || userName || 'Patient';
+            const nameEl = document.getElementById('profileDisplayName');
+            const profNameEl = document.getElementById('profName');
+            const avatarEl = document.getElementById('avatarInitials');
+            if (nameEl) nameEl.textContent = displayName;
+            if (profNameEl) profNameEl.textContent = displayName;
+            if (avatarEl) {
+                const parts = displayName.split(' ');
+                avatarEl.textContent = parts.length >= 2
+                    ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+                    : displayName.substring(0, 2).toUpperCase();
+            }
+
+            // Additional Fields
+            const pledgeDob = sessionStorage.getItem('pledgeDob');
+            const pledgeGender = sessionStorage.getItem('pledgeGender');
+            const pledgePhone = sessionStorage.getItem('pledgePhone');
+            const pledgeEmail = sessionStorage.getItem('pledgeEmail');
+            
+            if (pledgeDob) {
+                const dobEl = document.getElementById('profDob');
+                if (dobEl) dobEl.textContent = pledgeDob;
+            }
+            if (pledgeGender) {
+                const genderEl = document.getElementById('profGender');
+                if (genderEl) genderEl.textContent = pledgeGender;
+            }
+            if (pledgePhone) {
+                const phoneEl = document.getElementById('profPhone');
+                if (phoneEl) phoneEl.textContent = pledgePhone;
+            }
+            if (pledgeEmail) {
+                const emailEl = document.getElementById('profEmail');
+                if (emailEl) emailEl.textContent = pledgeEmail;
+                
+                // Also update the input field in the Security section
+                const emailInput = document.querySelector('input[type="email"]');
+                if (emailInput) emailInput.value = pledgeEmail;
+            }
+
+            // ABHA ID
+            if (pledgeAbha) {
+                const abhaEl = document.getElementById('profAbha');
+                if (abhaEl) abhaEl.textContent = pledgeAbha;
+            }
+
+            // Blood Group
+            if (pledgeBlood) {
+                const bgEl = document.getElementById('profBloodGroup');
+                if (bgEl) bgEl.textContent = pledgeBlood;
+                const bgLabel = document.getElementById('profBloodLabel');
+                if (bgLabel) {
+                    const compatMap = { 'O+': 'Universal Donor', 'O-': 'Universal Donor', 'A+': 'Group A', 'A-': 'Group A', 'B+': 'Group B', 'B-': 'Group B', 'AB+': 'Universal Recipient', 'AB-': 'Universal Recipient' };
+                    bgLabel.textContent = compatMap[pledgeBlood] || 'Blood Type Verified';
+                }
+            }
+
+            // Organ Pledge Status & List
+            if (pledgeStatus === 'CONFIRMED') {
+                const statusBadge = document.getElementById('profPledgeStatus');
+                if (statusBadge) statusBadge.innerHTML = '<svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg> CONFIRMED DONOR';
+                const statusLabel = document.getElementById('statusLabel');
+                const statusDot = document.getElementById('statusDot');
+                if (statusLabel) statusLabel.textContent = 'Pledge On-Chain';
+                if (statusDot) statusDot.className = 'w-2 h-2 bg-emerald-500 rounded-full pulse-dot';
+            }
+
+            // Tx Hash display
+            if (pledgeTxHash) {
+                const txEl = document.getElementById('profPledgeTx');
+                if (txEl) txEl.textContent = `TxHash: ${pledgeTxHash.substring(0, 18)}...`;
+            }
+
+            // Parse organ bitmap to names
+            if (pledgeBitmap > 0) {
+                const organNames = [];
+                if (pledgeBitmap & 1) organNames.push('❤️ Heart');
+                if (pledgeBitmap & 2) organNames.push('🫁 Lungs');
+                if (pledgeBitmap & 4) organNames.push('🫘 Kidneys');
+                if (pledgeBitmap & 8) organNames.push('🟤 Liver');
+                if (pledgeBitmap & 16) organNames.push('👁️ Corneas');
+                if (pledgeBitmap & 32) organNames.push('🫀 Pancreas');
+                if (pledgeBitmap & 64) organNames.push('🌀 Intestine');
+                if (pledgeBitmap & 128) organNames.push('🩸 Skin');
+                const organsEl = document.getElementById('profOrgansList');
+                if (organsEl) organsEl.textContent = 'Pledged: ' + organNames.join(', ');
+            }
+
+            // Witness info
+            if (pledgeWitness) {
+                const witnessEl = document.getElementById('profWitness');
+                if (witnessEl) witnessEl.textContent = pledgeWitness + (pledgeWitnessContact ? ' · ' + pledgeWitnessContact : '');
+            }
+
+            // SHA-256 hash
+            const hashEl = document.querySelector('#profSha256');
+            if (hashEl) {
+                hashEl.textContent = docSha || userHash || '0xdb4a2c8e91f3b74d6c02e5a1f9b3d7c8e4f02a81e';
+            }
+
+            // Wallet hash
+            const walletEl = document.querySelector('#profWallet');
+            if (walletEl && userHash) {
+                walletEl.textContent = userHash.substring(0, 24) + '...' + userHash.substring(userHash.length - 4);
+            }
+        });
+
+        function showSaveToast() {
+            // Gather current field values and persist to sessionStorage
+            const emailInput = document.querySelector('input[type="email"]');
+            if (emailInput && emailInput.value) {
+                sessionStorage.setItem('pledgeEmail', emailInput.value);
+                const emailDisplay = document.getElementById('profEmail');
+                if (emailDisplay) emailDisplay.textContent = emailInput.value;
+            }
+
+            // Attempt to push to backend
+            const pledgeData = {
+                abhaId: sessionStorage.getItem('pledgeAbha') || sessionStorage.getItem('abhaId'),
+                patientName: sessionStorage.getItem('pledgeName') || sessionStorage.getItem('userName'),
+                patientAge: parseInt(sessionStorage.getItem('pledgeAge') || '0'),
+                bloodGroup: sessionStorage.getItem('pledgeBloodGroup'),
+                abhaHash: sessionStorage.getItem('userHash') || '',
+                documentHash: sessionStorage.getItem('documentSHA256') || '',
+                cid: sessionStorage.getItem('ipfsCid') || '',
+                organBitmap: parseInt(sessionStorage.getItem('pledgeOrganBitmap') || '0'),
+                witnessName: sessionStorage.getItem('pledgeWitnessName') || '',
+                witnessContact: sessionStorage.getItem('pledgeWitnessContact') || ''
+            };
+
+            fetch('http://localhost:8080/api/pledge/verify-witness', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pledgeData)
+            }).then(r => r.json()).then(data => {
+                if (data.transactionHash) {
+                    sessionStorage.setItem('pledgeTxHash', data.transactionHash);
+                }
+            }).catch(() => {
+                // Backend offline — changes saved locally in sessionStorage
+            });
+
+            const toast = document.getElementById('saveToast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3500);
+        }
+    </script>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

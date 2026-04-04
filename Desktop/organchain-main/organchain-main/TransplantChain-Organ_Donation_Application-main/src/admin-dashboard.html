@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Admin Command Center — OrganChain</title>
+    <meta name="description" content="OrganChain Admin Command Center — AI-powered organ matching, threat blocking, and live blockchain feed.">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .nav-item { display:flex; align-items:center; height:100%; padding:0 1rem; font-size:0.8rem; font-weight:500; color:#94a3b8; transition:all 0.2s; text-decoration:none; border-bottom:2px solid transparent; }
+        .nav-item:hover { color:#fff; }
+        .nav-active { color:#10b981 !important; font-weight:700; border-bottom-color:#10b981; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+        .fade-up { animation: fadeUp 0.5s ease-out forwards; }
+        .fade-d1 { animation-delay:0.08s; opacity:0; }
+        .fade-d2 { animation-delay:0.16s; opacity:0; }
+        @keyframes shimmer { 0%,100%{ box-shadow:0 0 0 0 rgba(239,68,68,0.5);} 50%{ box-shadow:0 0 0 12px rgba(239,68,68,0);} }
+        .pulse-threat { animation: shimmer 2s infinite; }
+        @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .slide-up { animation: slideUp 0.35s ease-out forwards; }
+        @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(16,185,129,0.5)} 70%{box-shadow:0 0 0 10px rgba(16,185,129,0)} 100%{box-shadow:0 0 0 0 rgba(16,185,129,0)} }
+        .pulse-ring { animation: pulse-ring 2s infinite; }
+        #liveFeedContainer::-webkit-scrollbar, #threatLog::-webkit-scrollbar { width:5px; }
+        #liveFeedContainer::-webkit-scrollbar-track, #threatLog::-webkit-scrollbar-track { background:#0f172a; }
+        #liveFeedContainer::-webkit-scrollbar-thumb, #threatLog::-webkit-scrollbar-thumb { background:#334155; border-radius:4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+<!-- ── Admin Navigation ── -->
+<header style="background:#0F172A; border-bottom:1px solid #1e293b;" class="shrink-0 z-50 sticky top-0">
+    <nav class="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="admin-dashboard.html" class="flex items-center gap-2 transition-opacity hover:opacity-90">
+            <span class="text-white font-bold tracking-tight text-lg">Tech Knight <span class="text-emerald-500 mx-1">|</span> <span class="font-light text-slate-300">Admin Command Center</span></span>
+        </a>
+        <div class="flex items-center gap-4">
+            <ul class="flex items-center h-full gap-0.5 m-0 p-0 list-none hidden md:flex">
+                <li><a href="admin-dashboard.html" class="nav-item nav-active"><svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Dashboard</a></li>
+                <li><a href="node-registry.html" class="nav-item">Node Registry</a></li>
+                <li><a href="audit-ledger.html" class="nav-item">Audit Ledger</a></li>
+                <li><a href="match-archive.html" class="nav-item">Match Archive</a></li>
+                <li><a href="security-logs.html" class="nav-item">Security Logs</a></li>
+            </ul>
+            <div class="h-6 w-px bg-slate-700 hidden md:block"></div>
+            <button onclick="sessionStorage.clear(); window.location.href='login.html';" class="text-xs font-bold text-slate-400 hover:text-rose-400 transition-colors flex items-center gap-1.5 border border-slate-700 hover:border-rose-500/50 px-3 py-1.5 rounded-lg">
+                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+</header>
+
+<main class="w-full max-w-[1440px] mx-auto px-6 py-8 flex-1">
+    <!-- ── Page Header + Action Buttons ── -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 fade-up">
+        <div>
+            <p class="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-1 flex items-center gap-2">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                OrganChain Admin Portal
+            </p>
+            <h1 class="text-3xl font-black text-slate-900 tracking-tight">Command Center</h1>
+            <p class="text-slate-500 font-medium text-sm mt-1">Real-time AI matching, threat intelligence, and blockchain governance.</p>
+        </div>
+        <div class="flex items-center gap-3 flex-wrap">
+            <button onclick="openMatchModal()" id="matchBtn" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-lg flex items-center gap-2 active:scale-[0.97]">
+                <svg class="w-4 h-4 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" /></svg>
+                Match Donor / Recipient
+            </button>
+            <button onclick="openManualMatchModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-lg flex items-center gap-2 active:scale-[0.97]">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                Manual Match
+            </button>
+            <button onclick="toggleSecurity()" id="secBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all shadow-lg flex items-center gap-2 active:scale-[0.97]">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                <span id="secBtnLabel">Activate Security for Threats</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Stats Row ── -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8 fade-up fade-d1">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:-translate-y-0.5 transition-transform">
+            <div class="flex items-center gap-2 mb-2"><div class="w-2 h-2 rounded-full bg-emerald-500"></div><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Pledges</span></div>
+            <div class="text-2xl font-black text-slate-900 mono" id="statPledges">—</div>
+            <div class="text-[10px] font-bold text-emerald-600 mt-0.5">All on-chain registered</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:-translate-y-0.5 transition-transform">
+            <div class="flex items-center gap-2 mb-2"><div class="w-2 h-2 rounded-full bg-blue-500"></div><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Donors</span></div>
+            <div class="text-2xl font-black text-slate-900 mono" id="statDonors">—</div>
+            <div class="text-[10px] font-bold text-blue-500 mt-0.5">Awaiting match</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:-translate-y-0.5 transition-transform">
+            <div class="flex items-center gap-2 mb-2"><div class="w-2 h-2 rounded-full bg-indigo-500"></div><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Recipient Queue</span></div>
+            <div class="text-2xl font-black text-slate-900 mono" id="statRecipients">—</div>
+            <div class="text-[10px] font-bold text-indigo-500 mt-0.5">Priority scoring active</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:-translate-y-0.5 transition-transform">
+            <div class="flex items-center gap-2 mb-2"><div class="w-2 h-2 rounded-full bg-amber-500"></div><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">AI Match Rate</span></div>
+            <div class="text-2xl font-black text-slate-900" id="statMatchRate">—<span class="text-lg text-slate-400">%</span></div>
+            <div class="text-[10px] font-bold text-amber-600 mt-0.5">HLA + ABO optimized</div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 hover:-translate-y-0.5 transition-transform col-span-2 md:col-span-1" id="threatCard">
+            <div class="flex items-center gap-2 mb-2"><div class="w-2 h-2 rounded-full bg-emerald-500" id="threatDot"></div><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Threat Level</span></div>
+            <div class="text-2xl font-black tracking-tight" id="threatLevelText"><span class="text-emerald-600">Low</span> <span class="text-base text-slate-400 font-bold">/ Nominal</span></div>
+            <div class="text-[10px] font-bold text-emerald-600 mt-0.5" id="threatSubtext">All boundaries secured</div>
+        </div>
+    </div>
+
+    <!-- ── Hospital Filter ── -->
+    <div class="mb-6 fade-up fade-d1">
+        <div class="flex items-center gap-3">
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Filter by Hospital</label>
+            <select id="hospitalFilter" onchange="onHospitalFilterChange()" class="border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all">
+                <option value="">All Hospitals</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ── Main Content: Table + Sidebar ── -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-up fade-d2">
+        <!-- Left: Patient Registry Table -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+                    <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
+                        Registered Patient Registry <span class="text-emerald-600 mono text-xs ml-1" id="tableCount">(—)</span>
+                    </h2>
+                    <div class="relative">
+                        <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+                        <input type="text" id="searchInput" onkeyup="filterPatients()" placeholder="Search name, ABHA, blood..." class="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 w-56 transition-all placeholder:text-slate-400 font-medium">
+                    </div>
+                </div>
+                <div class="overflow-x-auto" style="max-height:480px; overflow-y:auto;">
+                    <table class="w-full text-left border-collapse whitespace-nowrap" id="patientTable">
+                        <thead class="sticky top-0 z-10">
+                            <tr class="bg-slate-50 border-b border-slate-200">
+                                <th class="py-3 px-5 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Name</th>
+                                <th class="py-3 px-5 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">ABHA ID</th>
+                                <th class="py-3 px-5 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Blood</th>
+                                <th class="py-3 px-5 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">HLA</th>
+                                <th class="py-3 px-5 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Hospital</th>
+                                <th class="py-3 px-5 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Organ</th>
+                                <th class="py-3 px-5 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Role</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-slate-100" id="patientTableBody">
+                            <tr><td colspan="7" class="py-8 text-center text-slate-400 font-bold">Loading from backend...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="space-y-6">
+            <!-- Live Transaction Feed -->
+            <div class="bg-slate-950 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+                <div class="bg-slate-900 border-b border-slate-800 px-5 py-3.5 flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <div class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></div>
+                        Live Blockchain Feed
+                    </h3>
+                    <span class="text-[10px] mono text-slate-500" id="blockHeight">#—</span>
+                </div>
+                <div class="p-4 space-y-2 max-h-[280px] overflow-y-auto" id="liveFeedContainer">
+                    <div class="text-center text-slate-500 text-xs py-6 font-bold">Connecting to Ganache...</div>
+                </div>
+            </div>
+            <!-- Threat Log -->
+            <div class="bg-slate-950 rounded-2xl border border-slate-800 shadow-xl overflow-hidden" id="threatLogContainer">
+                <div class="bg-slate-900 border-b border-slate-800 px-5 py-3.5 flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <svg class="w-3.5 h-3.5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        Threat Intercept Log
+                    </h3>
+                    <span class="text-[10px] mono font-bold" id="blockedCount"><span class="text-slate-500">0</span> blocked</span>
+                </div>
+                <div class="p-4 space-y-2 max-h-[260px] overflow-y-auto" id="threatLog">
+                    <div class="text-center text-slate-600 text-xs py-6 font-bold">Security inactive — activate to monitor</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ── AI Matching Modal ── -->
+<div id="matchModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+    <div class="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]" style="animation: fadeUp 0.3s ease-out forwards;">
+        <div class="bg-slate-950 p-6 flex items-start justify-between relative overflow-hidden shrink-0">
+            <div class="relative z-10">
+                <h3 class="text-white font-extrabold text-xl tracking-tight">AI Organ Matching Engine</h3>
+                <p class="text-emerald-400 font-bold text-xs uppercase tracking-widest mt-1">HLA + ABO Compatibility Analysis</p>
+            </div>
+            <button onclick="closeMatchModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors z-10 border border-slate-700/50">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto flex-1">
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Select Donor</label>
+                    <select id="donorSelect" onchange="runMatching()" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30">
+                        <option value="">— Select a registered donor —</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Hospital Filter</label>
+                    <select id="matchHospitalFilter" onchange="runMatching()" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30">
+                        <option value="">All Hospitals</option>
+                    </select>
+                </div>
+            </div>
+            <div id="matchResults" class="hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-sm font-bold text-slate-700">Top Compatible Recipients</h4>
+                    <span class="text-[10px] font-bold text-emerald-600 mono bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded">Ranked by AI Score</span>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <table class="w-full text-left border-collapse whitespace-nowrap text-sm">
+                        <thead><tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="py-2.5 px-4 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Rank</th>
+                            <th class="py-2.5 px-4 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Recipient</th>
+                            <th class="py-2.5 px-4 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Blood</th>
+                            <th class="py-2.5 px-4 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">HLA</th>
+                            <th class="py-2.5 px-4 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest">Score</th>
+                            <th class="py-2.5 px-4 text-[10px] uppercase font-extrabold text-slate-500 tracking-widest text-right">Action</th>
+                        </tr></thead>
+                        <tbody id="matchTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="matchPlaceholder" class="text-center py-12 text-slate-400 font-bold text-sm">Select a donor above to run the AI matching algorithm.</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Manual Match Modal ── -->
+<div id="manualMatchModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden" style="animation: fadeUp 0.3s ease-out forwards;">
+        <div class="bg-indigo-950 p-6 flex items-start justify-between">
+            <div>
+                <h3 class="text-white font-extrabold text-xl tracking-tight">Manual Match Override</h3>
+                <p class="text-indigo-400 font-bold text-xs uppercase tracking-widest mt-1">Bypass AI — Direct Blockchain Execution</p>
+            </div>
+            <button onclick="closeManualMatchModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-slate-700/50">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Donor ABHA Hash / ID</label>
+                <input type="text" id="manualDonorHash" placeholder="0x... or ABHA ID" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold mono bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Recipient ABHA Hash / ID</label>
+                <input type="text" id="manualRecipientHash" placeholder="0x... or ABHA ID" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold mono bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Organ Type</label>
+                <select id="manualOrganType" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+                    <option value="Kidney">Kidney</option><option value="Liver">Liver</option><option value="Heart">Heart</option>
+                    <option value="Lung">Lung</option><option value="Cornea">Cornea</option><option value="Pancreas">Pancreas</option>
+                </select>
+            </div>
+            <div id="manualMatchResult" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Transaction Hash</div>
+                <div class="text-emerald-600 mono text-xs font-bold break-all" id="manualTxHash"></div>
+                <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 mt-3">Block Number</div>
+                <div class="text-blue-600 mono text-xs font-bold" id="manualBlockNum"></div>
+            </div>
+            <button onclick="executeManualMatch()" id="manualMatchBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg text-sm flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                Execute Manual Match on Blockchain
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Match Detail Modal ── -->
+<div id="matchDetailModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col" style="animation: fadeUp 0.3s ease-out forwards;">
+        <div class="bg-slate-950 p-6 flex items-start justify-between shrink-0">
+            <div>
+                <h3 class="text-white font-extrabold text-xl tracking-tight">Match Details</h3>
+                <p class="text-emerald-400 font-bold text-xs uppercase tracking-widest mt-1">Complete Donor ↔ Recipient Profile</p>
+            </div>
+            <button onclick="closeMatchDetailModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-slate-700/50">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+        <div class="p-6 overflow-y-auto flex-1" id="matchDetailContent">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- ── Approval Modal ── -->
+<div id="approvalModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-2xl shadow-2xl border border-emerald-500/30 max-w-md w-full p-8 text-center relative overflow-hidden" style="animation: fadeUp 0.3s ease-out forwards;">
+        <div class="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-5 relative z-10">
+            <svg class="w-8 h-8 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+        </div>
+        <h3 class="text-xl font-extrabold text-white mb-2 relative z-10" id="approvalTitle">Multi-Sig Approval</h3>
+        <p class="text-sm text-slate-400 font-medium mb-6 relative z-10" id="approvalDesc">Executing multi-signature consensus for match approval.</p>
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-left relative z-10 mb-6 shadow-inner">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Governance Signature</span>
+                <span id="msig-status" class="text-[11px] font-extrabold text-amber-400 mono">0/3 Verified</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mb-3">
+                <div id="msig-bar" class="h-full bg-amber-500 transition-all duration-1000 shadow-[0_0_10px_rgba(245,158,11,0.5)]" style="width:0%"></div>
+            </div>
+            <div class="text-[11px] text-slate-400 mono flex items-center gap-2">
+                <svg id="msig-spinner" class="w-3.5 h-3.5 animate-spin text-amber-500 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span id="msig-text">Gathering P2P Consensus...</span>
+            </div>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-left relative z-10 mb-6 hidden" id="txResultBox">
+            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Transaction Hash</div>
+            <div class="text-emerald-400 mono text-xs font-bold break-all" id="txResultHash"></div>
+            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1 mt-2">Block Number</div>
+            <div class="text-blue-400 mono text-xs font-bold" id="txResultBlock"></div>
+            <div class="text-[10px] text-slate-500 mt-2" id="txResultTime"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 relative z-10" id="approvalBtns">
+            <button onclick="closeApprovalModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-all text-sm border border-slate-700">Cancel</button>
+            <button id="btnConfirmMatch" disabled class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg text-sm border border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed">Confirm on Blockchain</button>
+        </div>
+        <button onclick="closeApprovalModal()" class="hidden w-full mt-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm" id="btnDone">Done — Return to Dashboard</button>
+    </div>
+</div>
+
+<script src="admin-dashboard-script.js"></script>
+</body>
+</html>

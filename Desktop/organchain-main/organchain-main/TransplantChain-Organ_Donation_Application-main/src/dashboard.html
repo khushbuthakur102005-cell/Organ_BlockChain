@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Dashboard — OrganChain</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .nav-item { display:inline-flex; align-items:center; white-space:nowrap; flex-shrink:0; height:100%; padding:0 0.65rem; font-size:0.85rem; font-weight:500; color:#cbd5e1; transition:all 0.2s ease-in-out; text-decoration:none; border-bottom:2px solid transparent; }
+        .nav-item:hover { color: #10B981; }
+        .nav-active { color: #10B981; font-weight:600; border-bottom:2px solid #10B981; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+        .fade-up { animation: fadeUp 0.5s ease-out forwards; }
+        .fade-up-d1 { animation-delay: 0.1s; opacity:0; }
+        .fade-up-d2 { animation-delay: 0.2s; opacity:0; }
+        .fade-up-d3 { animation-delay: 0.3s; opacity:0; }
+        .fade-up-d4 { animation-delay: 0.4s; opacity:0; }
+        @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+        .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes scroll-log { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+        .scroll-log { animation: scroll-log 20s linear infinite; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+        .cursor-blink { display:inline-block; width:8px; height:14px; background:#34d399; animation: blink 1s step-end infinite; vertical-align: middle; margin-left:2px; }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen pt-16">
+
+<!-- Security Violation Modal -->
+<div id="securityModal" class="hidden fixed inset-0 bg-red-950/80 backdrop-blur-sm z-[1001] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-red-200 max-w-md w-full p-8 text-center">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-5">
+            <svg class="w-8 h-8 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+        </div>
+        <h3 class="text-xl font-extrabold text-red-900 mb-2">Security Violation</h3>
+        <p class="text-sm text-red-600 font-medium mb-6">Unauthorized clearance level detected. You do not have administrative privileges.</p>
+        <button onclick="window.location.href='index.html'" class="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-all shadow-lg text-sm">Return to Authentication</button>
+    </div>
+</div>
+
+<!-- Nav -->
+<header class="fixed top-0 w-full z-[1000] bg-slate-950 border-b border-slate-800 h-16">
+    <nav class="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
+        <a href="dashboard.html" class="flex items-center gap-2 transition-opacity hover:opacity-90">
+            <span class="text-white font-bold tracking-tight text-lg">Tech Knight <span class="text-emerald-500 mx-1">|</span> <span class="font-light text-slate-300">OrganChain</span></span>
+        </a>
+        <div class="flex items-center gap-4 h-full">
+            <ul id="patientNav" class="flex items-center h-full gap-1 m-0 p-0 list-none hidden md:flex">
+                <li><a href="dashboard.html" class="nav-item nav-active" style="display:flex; align-items:center;"><i data-lucide="home" class="w-[18px] h-[18px] mr-2"></i><span>Home</span></a></li>
+                <li><a href="about.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="info" class="w-[18px] h-[18px] mr-2"></i><span>About</span></a></li>
+                <li><a href="hospitals.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="building-2" class="w-[18px] h-[18px] mr-2"></i><span>Hospitals</span></a></li>
+                <li><a href="pledge-verification.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="shield-check" class="w-[18px] h-[18px] mr-2"></i><span>Pledge Portal</span></a></li>
+                <li><a href="awareness.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="book-open" class="w-[18px] h-[18px] mr-2"></i><span>Awareness</span></a></li>
+                <li><a href="faqs.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="help-circle" class="w-[18px] h-[18px] mr-2"></i><span>FAQs</span></a></li>
+                <li><a href="download-forms.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="file-text" class="w-[18px] h-[18px] mr-2"></i><span>Download Forms</span></a></li>
+                <li><a href="profile.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="user" class="w-[18px] h-[18px] mr-2"></i><span>Profile</span></a></li>
+            </ul>
+            <ul id="adminNav" class="flex items-center h-full gap-1 m-0 p-0 list-none hidden">
+                <li><a href="dashboard.html" class="nav-item nav-active"><svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Dashboard</a></li>
+                <li><a href="node-registry.html" class="nav-item">Node Registry</a></li>
+                <li><a href="audit-ledger.html" class="nav-item">Audit Ledger</a></li>
+                <li><a href="match-archive.html" class="nav-item">Match Archive</a></li>
+                <li><a href="security-logs.html" class="nav-item">Security Logs</a></li>
+            </ul>
+            <div class="h-6 w-px bg-slate-700 hidden md:block"></div>
+            <button onclick="sessionStorage.clear(); window.location.href='index.html';" class="text-xs font-bold text-slate-400 hover:text-emerald-500 transition-colors flex items-center gap-1.5 border border-slate-700 hover:border-emerald-500/50 px-3 py-1.5 rounded-lg shrink-0">
+                <i data-lucide="log-out" class="w-[18px] h-[18px]"></i>
+                Logout
+            </button>
+        </div>
+    </nav>
+</header>
+
+<!-- ═══════════════ PATIENT DASHBOARD ═══════════════ -->
+<div id="patientDash" class="hidden flex-1">
+    <div class="w-full max-w-[1400px] mx-auto px-6 py-10">
+        <!-- Patient Hero Card -->
+        <div class="bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-600 rounded-3xl p-8 md:p-12 shadow-xl shadow-emerald-500/20 mb-10 relative overflow-hidden fade-up">
+            <div class="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -translate-y-20 translate-x-20"></div>
+            <div class="absolute bottom-0 left-0 w-60 h-60 bg-white/5 rounded-full translate-y-20 -translate-x-20"></div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white/60 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span></span>
+                    <span class="text-[10px] font-bold text-white/80 uppercase tracking-widest mono">Ledger Synced · Block #14,207,881</span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-2">Welcome back, <span id="patientName">Patient</span>.</h1>
+                <p class="text-emerald-100 font-medium text-lg max-w-2xl">Your biological metadata is secured on-chain. All records are immutably encrypted and synchronized with the national transplant registry.</p>
+            </div>
+        </div>
+
+        <!-- Action Required Banner -->
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4 mb-6 flex items-center justify-between shadow-sm fade-up" id="pledgeBanner">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-amber-100 rounded-xl flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-amber-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                </div>
+                <div>
+                    <p class="text-sm font-extrabold text-amber-900 tracking-tight">Action Required — Pledge Incomplete</p>
+                    <p class="text-xs text-amber-700 font-medium">Your organ pledge has not been cryptographically verified on the national ledger.</p>
+                </div>
+            </div>
+            <a href="pledge-verification.html" class="shrink-0 ml-4 inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl shadow transition-all active:scale-95">
+                Complete Verification
+                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            </a>
+        </div>
+
+        <!-- Automated Information Slideshow -->
+        <div class="relative w-full h-[300px] md:h-[400px] rounded-3xl overflow-hidden shadow-2xl mb-10 fade-up fade-up-d1 group border border-slate-200/50">
+            
+            <!-- Slide 1 -->
+            <div class="patient-slide absolute inset-0 transition-opacity duration-1000 opacity-100 z-10">
+                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
+                    <span class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-emerald-950 bg-emerald-400 px-3 py-1.5 rounded mb-3 shadow-[0_0_15px_rgba(52,211,153,0.5)]"><div class="w-1.5 h-1.5 rounded-full bg-emerald-950 animate-pulse"></div> System Update</span>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight mb-2" style="text-shadow: 0 4px 12px rgba(0,0,0,0.5);">ABHA Integration Success</h3>
+                    <p class="text-emerald-50 font-medium max-w-xl text-sm md:text-base">Your Ayushman Bharat Health Account (ABHA) is now continuously synced with the OrganChain ledger.</p>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="patient-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
+                <img src="https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=2000&auto=format&fit=crop" class="w-full h-full object-cover text-center">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
+                    <span class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-blue-950 bg-blue-400 px-3 py-1.5 rounded mb-3 shadow-[0_0_15px_rgba(96,165,250,0.5)]"><div class="w-1.5 h-1.5 rounded-full bg-blue-950 animate-pulse"></div> Network Expansion</span>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight mb-2" style="text-shadow: 0 4px 12px rgba(0,0,0,0.5);">New Blockchain Nodes Online</h3>
+                    <p class="text-blue-50 font-medium max-w-xl text-sm md:text-base">12 advanced cryptographic verification nodes have been deployed across South Zone hospitals to accelerate matching.</p>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="patient-slide absolute inset-0 transition-opacity duration-1000 opacity-0 z-0">
+                <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-8 md:p-12 w-full">
+                    <span class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest text-rose-950 bg-rose-400 px-3 py-1.5 rounded mb-3 shadow-[0_0_15px_rgba(251,113,133,0.5)]"><div class="w-1.5 h-1.5 rounded-full bg-rose-950 animate-pulse"></div> NOTTO Directive</span>
+                    <h3 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight mb-2" style="text-shadow: 0 4px 12px rgba(0,0,0,0.5);">Transplant Protocol Updates</h3>
+                    <p class="text-rose-50 font-medium max-w-xl text-sm md:text-base">Review the updated clinical guidelines and legal rights regarding the matching algorithm implemented this term.</p>
+                </div>
+            </div>
+
+            <!-- Slideshow Logic -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const slides = document.querySelectorAll('.patient-slide');
+                    let currentSlide = 0;
+                    if(slides.length > 0) {
+                        setInterval(() => {
+                            slides[currentSlide].classList.remove('opacity-100', 'z-10');
+                            slides[currentSlide].classList.add('opacity-0', 'z-0');
+                            currentSlide = (currentSlide + 1) % slides.length;
+                            slides[currentSlide].classList.remove('opacity-0', 'z-0');
+                            slides[currentSlide].classList.add('opacity-100', 'z-10');
+                        }, 2000);
+                    }
+                });
+            </script>
+        </div>
+
+        <!-- Grid Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8 fade-up fade-up-d4">
+            
+            <!-- My Medical Profile -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-7 relative flex flex-col">
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">My Medical Profile</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 flex-1">
+                    <div class="flex justify-between items-center py-2 border-b border-slate-50">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">ABHA ID</span>
+                        <span id="dashAbhaProfile" class="text-sm font-bold text-slate-800 mono tracking-tight">4567 8910 •••• 1314</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-slate-50">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Blood Group</span>
+                        <span class="bg-rose-100 text-rose-700 font-bold text-xs px-2 py-1 rounded shadow-sm">O+</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-slate-50">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">HLA Type</span>
+                        <span class="text-sm font-bold text-slate-800 mono">HLA-A2, B27</span>
+                    </div>
+                    <div class="pt-2">
+                        <div class="bg-emerald-500 text-white font-extrabold text-xs px-3 py-2.5 rounded-lg w-full text-center flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20">
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                            VERIFIED ORGAN DONOR
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <p class="text-[10px] text-slate-400 font-mono text-center tracking-tighter">Profile Hash (SHA-256): <span class="group-hover:text-slate-600 transition-colors">0x7a8f...b07d</span></p>
+                </div>
+            </div>
+
+            <!-- Waitlist Rank Tracker -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-7 relative flex flex-col">
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Waitlist Rank Tracker</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content -->
+                <div class="flex-1 flex flex-col justify-center items-center">
+                    <span class="text-5xl font-black text-slate-900 tracking-tighter mb-2">#142</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">National Registry</span>
+                    <div class="w-full mt-6 bg-slate-50 rounded-lg p-4 border border-slate-100 text-center">
+                        <p class="text-sm text-slate-600 font-medium">Your priority status is mathematically locked based on clinical scoring metrics.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Match Alerts -->
+            <div class="bg-white rounded-2xl border border-amber-200 shadow-lg shadow-amber-500/5 p-7 relative flex flex-col">
+                <div class="absolute top-0 left-0 w-full h-1 bg-amber-400"></div>
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" /></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Match Alerts</h3>
+                        </div>
+                    </div>
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                    </span>
+                </div>
+                
+                <div class="flex-1 flex flex-col gap-3">
+                    <div class="bg-amber-50/50 rounded-xl p-4 border border-amber-100 hover:border-amber-300 transition-colors cursor-pointer group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-bold text-amber-600 uppercase tracking-widest bg-amber-100 px-2 py-0.5 rounded">Preliminary Match</span>
+                            <span class="text-xs text-slate-400 font-bold">12h ago</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm mb-1 group-hover:text-amber-700 transition-colors">AIIMS Regional Node</h4>
+                        <p class="text-xs text-slate-500 font-medium">A potential 4/6 HLA allele match has been detected. Pending secondary verification.</p>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 text-center flex items-center justify-center h-full">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">No other recent alerts</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════ ADMIN DASHBOARD ═══════════════ -->
+<div id="adminDash" class="hidden flex-1">
+    <div class="w-full max-w-[1400px] mx-auto px-6 py-10">
+        <!-- Admin Hero Card -->
+        <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-8 md:p-12 shadow-xl mb-10 relative overflow-hidden border border-slate-700/50 fade-up">
+            <div class="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full -translate-y-20 translate-x-20"></div>
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
+                    <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mono">Network Operations Center · All Systems Nominal</span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-2">Node: <span id="adminNode" class="text-emerald-400">ADMIN</span></h1>
+                <p class="text-slate-400 font-medium text-lg max-w-2xl">Administrative terminal with full clearance. Monitor node health, execute match protocols, and audit the immutable transaction ledger.</p>
+            </div>
+        </div>
+
+        <!-- Global Metric Tiles -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8 fade-up fade-up-d1">
+            <!-- Active Donor Pool -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6 hover:-translate-y-1 transition-transform relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 opacity-[0.04]"><svg class="w-28 h-28 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" /></svg></div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg></div>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Donor Pool</span>
+                </div>
+                <div class="text-3xl font-extrabold text-slate-900 tracking-tight" id="metricDonorPool">--</div>
+                <div class="text-[11px] font-bold text-emerald-600 mt-1 uppercase tracking-widest">Synced with national registry</div>
+            </div>
+            <!-- Pending Matches -->
+            <div class="bg-white rounded-2xl border border-amber-100 shadow-lg p-6 hover:-translate-y-1 transition-transform relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-amber-50 text-amber-600 rounded-lg"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Pending Matches</span>
+                </div>
+                <div class="flex items-end gap-2">
+                    <div class="text-3xl font-extrabold text-slate-900 tracking-tight" id="metricPendingMatches">--</div>
+                    <div class="relative flex h-2 w-2 mb-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                    </div>
+                </div>
+                <div class="text-[11px] font-bold text-amber-600 mt-1 uppercase tracking-widest">Queue currently processing</div>
+            </div>
+            <!-- Network Availability -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6 hover:-translate-y-1 transition-transform relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-blue-50 text-blue-600 rounded-lg"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" /></svg></div>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Network Availability</span>
+                </div>
+                <div class="text-3xl font-extrabold text-blue-600 tracking-tight" id="metricUptime">--</div>
+                <div class="text-[11px] font-bold text-blue-500 mt-1 uppercase tracking-widest" id="metricNodesLabel">Avg across all active nodes</div>
+            </div>
+        </div>
+
+        <!-- Admin Module Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Module: Node Health -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-7 fade-up fade-up-d1">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
+                        <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">Node Health</h3>
+                    </div>
+                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded uppercase tracking-widest">Live</span>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between py-2.5 px-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-emerald-500 rounded-full"></div><span class="text-xs font-bold text-slate-700">AIIMS-DELHI-01</span></div>
+                        <span class="mono text-[11px] text-emerald-600 font-bold">ONLINE</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2.5 px-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-emerald-500 rounded-full"></div><span class="text-xs font-bold text-slate-700">PGIMER-CHD-02</span></div>
+                        <span class="mono text-[11px] text-emerald-600 font-bold">ONLINE</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2.5 px-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-emerald-500 rounded-full"></div><span class="text-xs font-bold text-slate-700">SGPGI-LKO-03</span></div>
+                        <span class="mono text-[11px] text-emerald-600 font-bold">ONLINE</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2.5 px-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-amber-400 rounded-full pulse-dot"></div><span class="text-xs font-bold text-slate-700">CMC-VLR-04</span></div>
+                        <span class="mono text-[11px] text-amber-600 font-bold">SYNCING</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2.5 px-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex items-center gap-2"><div class="w-2 h-2 bg-red-400 rounded-full"></div><span class="text-xs font-bold text-slate-700">NIMHANS-BLR-05</span></div>
+                        <span class="mono text-[11px] text-red-500 font-bold">OFFLINE</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-slate-400">4/5 Nodes · <span class="text-emerald-600">80% Uptime</span></span>
+                        <!-- Sync Pulse India Map -->
+                        <div class="relative" style="width:80px; height:50px;">
+                            <svg viewBox="0 0 120 140" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M55 5 L80 12 L95 30 L90 55 L80 75 L70 100 L60 115 L50 100 L40 75 L30 55 L25 30 L40 12 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <!-- AIIMS-DELHI dot -->
+                                <g transform="translate(58,28)">
+                                    <circle r="6" fill="#10B981" opacity="0.25" class="pulse-dot"/>
+                                    <circle r="3.5" fill="#10B981"/>
+                                </g>
+                                <!-- Mumbai -->
+                                <circle cx="42" cy="68" r="2" fill="#94a3b8"/>
+                                <!-- Chennai -->
+                                <circle cx="58" cy="92" r="2" fill="#94a3b8"/>
+                            </svg>
+                            <span class="absolute bottom-0 right-0 text-[8px] font-bold text-emerald-600 uppercase tracking-widest">AIIMS-DEL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module: MATCH_EXEC Terminal -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden fade-up fade-up-d2">
+                <div class="p-7 pb-4">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"/></svg></div>
+                        <div>
+                            <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">MATCH_EXEC()</h3>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Smart Contract Terminal</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-950 p-5 mx-5 mb-5 rounded-xl border border-slate-800">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                        <span class="mono text-[10px] text-slate-500 ml-2">organchain@mainnet ~</span>
+                    </div>
+                    <div class="mono text-[12px] text-slate-300 space-y-1.5 leading-relaxed" id="terminalBody">
+                        <p><span class="text-emerald-400">$</span> match_exec <span class="text-blue-400">--donor</span> 0x8f3a <span class="text-blue-400">--recipient</span> waitlist</p>
+                        <p id="tl-1" class="text-slate-500 opacity-0">[INFO] Validating ABO compatibility...</p>
+                        <p id="tl-2" class="text-slate-500 opacity-0">[INFO] HLA cross-match: 5/6 antigens...</p>
+                        <p id="tl-3" class="text-emerald-400 opacity-0">[OK] Match found: Recipient #4,217</p>
+                        <p id="tl-4" class="text-emerald-400 opacity-0">[OK] Block confirmed: #14,207,882</p>
+                        <p><span class="text-emerald-400">$</span> <span class="cursor-blink"></span></p>
+                    </div>
+                </div>
+                <div class="px-7 pb-5">
+                    <button onclick="openNewMatchModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20 text-sm flex items-center justify-center gap-2 active:scale-[0.98]">
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" /></svg>
+                        Execute New Match
+                    </button>
+                </div>
+            </div>
+
+            <!-- Module: System Audit -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-7 fade-up fade-up-d3">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center"><svg class="w-5 h-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                        <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">System Audit</h3>
+                    </div>
+                    <span class="text-[9px] font-bold text-indigo-700 bg-indigo-100 px-2 py-1 rounded uppercase tracking-widest">Stream</span>
+                </div>
+                <div class="h-64 overflow-hidden relative">
+                    <div class="scroll-log space-y-2">
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-emerald-600 font-bold">MATCH</span> · 0x8f3a...c9d2 · Block #14,207,882 · <span class="text-slate-400">2s ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-blue-600 font-bold">ENROLL</span> · 0xb34d...08ab · Block #14,207,881 · <span class="text-slate-400">18s ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-amber-600 font-bold">PLEDGE</span> · 0x11fa...19cd · Block #14,207,880 · <span class="text-slate-400">42s ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-emerald-600 font-bold">MATCH</span> · 0x28ba...89ef · Block #14,207,879 · <span class="text-slate-400">1m ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-indigo-600 font-bold">AUDIT</span> · 0x7a8f...b07d · Block #14,207,878 · <span class="text-slate-400">2m ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-emerald-600 font-bold">MATCH</span> · 0xd4e1...f3a6 · Block #14,207,877 · <span class="text-slate-400">3m ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-blue-600 font-bold">ENROLL</span> · 0xa92c...7b18 · Block #14,207,876 · <span class="text-slate-400">5m ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-red-600 font-bold">REVOKE</span> · 0x5f2e...a4c0 · Block #14,207,875 · <span class="text-slate-400">7m ago</span></div>
+                        <!-- Duplicate for scroll loop -->
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-emerald-600 font-bold">MATCH</span> · 0x8f3a...c9d2 · Block #14,207,882 · <span class="text-slate-400">2s ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-blue-600 font-bold">ENROLL</span> · 0xb34d...08ab · Block #14,207,881 · <span class="text-slate-400">18s ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-amber-600 font-bold">PLEDGE</span> · 0x11fa...19cd · Block #14,207,880 · <span class="text-slate-400">42s ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-emerald-600 font-bold">MATCH</span> · 0x28ba...89ef · Block #14,207,879 · <span class="text-slate-400">1m ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-indigo-600 font-bold">AUDIT</span> · 0x7a8f...b07d · Block #14,207,878 · <span class="text-slate-400">2m ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-emerald-600 font-bold">MATCH</span> · 0xd4e1...f3a6 · Block #14,207,877 · <span class="text-slate-400">3m ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-blue-600 font-bold">ENROLL</span> · 0xa92c...7b18 · Block #14,207,876 · <span class="text-slate-400">5m ago</span></div>
+                        <div class="mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2"><span class="text-red-600 font-bold">REVOKE</span> · 0x5f2e...a4c0 · Block #14,207,875 · <span class="text-slate-400">7m ago</span></div>
+                    </div>
+                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Best Match Results Panel -->
+        <div id="bestMatchPanel" class="hidden mt-6 bg-white rounded-2xl border border-emerald-200 shadow-lg overflow-hidden fade-up">
+            <div class="px-7 py-5 border-b border-emerald-100 bg-emerald-50 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-emerald-600 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-emerald-900 tracking-tight">AI Match Results</h3>
+                        <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest" id="matchResultMeta">Top 5 Candidates</p>
+                    </div>
+                </div>
+                <button onclick="document.getElementById('bestMatchPanel').classList.add('hidden')" class="text-xs font-bold text-emerald-600 hover:text-emerald-800 border border-emerald-200 bg-white px-3 py-1.5 rounded-lg">Dismiss</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="px-6 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">#</th>
+                            <th class="px-6 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Patient Name</th>
+                            <th class="px-6 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Age</th>
+                            <th class="px-6 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Blood Group</th>
+                            <th class="px-6 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">ABHA ID</th>
+                            <th class="px-6 py-3 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">AI Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bestMatchTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Digital Donor ID Modal -->
+<div id="donorIdModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-[fadeUp_0.3s_ease-out_forwards]">
+        <div class="bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500 p-6 flex items-center justify-between relative overflow-hidden">
+            <div class="absolute right-0 top-0 w-32 h-32 bg-white/5 rounded-full -translate-y-8 translate-x-8"></div>
+            <div class="relative z-10">
+                <p class="text-emerald-100 text-[10px] font-bold uppercase tracking-widest">OrganChain · National Registry</p>
+                <h3 class="text-white font-extrabold text-xl tracking-tight mt-1">Digital Donor Member ID</h3>
+            </div>
+            <button onclick="closeDonorIdModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 transition-colors z-10">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+        <div class="p-8">
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 border border-slate-700 relative overflow-hidden mb-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Verified Donor</p>
+                        <p class="text-white font-extrabold text-xl tracking-tight mt-1" id="donorIdName">Patient</p>
+                        <p id="dashAbhaModal" class="mono text-emerald-300 text-[11px] mt-0.5">ID: 12-3456-7890-1234</p>
+                    </div>
+                    <!-- QR code placeholder SVG -->
+                    <div class="w-16 h-16 bg-white rounded-xl p-1.5">
+                        <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="5" y="5" width="38" height="38" fill="none" stroke="#0f172a" stroke-width="8"/>
+                            <rect x="15" y="15" width="18" height="18" fill="#0f172a"/>
+                            <rect x="57" y="5" width="38" height="38" fill="none" stroke="#0f172a" stroke-width="8"/>
+                            <rect x="67" y="15" width="18" height="18" fill="#0f172a"/>
+                            <rect x="5" y="57" width="38" height="38" fill="none" stroke="#0f172a" stroke-width="8"/>
+                            <rect x="15" y="67" width="18" height="18" fill="#0f172a"/>
+                            <rect x="57" y="57" width="8" height="8" fill="#0f172a"/>
+                            <rect x="71" y="57" width="8" height="8" fill="#0f172a"/>
+                            <rect x="85" y="57" width="10" height="8" fill="#0f172a"/>
+                            <rect x="57" y="71" width="8" height="8" fill="#0f172a"/>
+                            <rect x="71" y="71" width="8" height="8" fill="#0f172a"/>
+                            <rect x="85" y="71" width="10" height="8" fill="#0f172a"/>
+                            <rect x="57" y="85" width="8" height="10" fill="#0f172a"/>
+                            <rect x="71" y="85" width="24" height="10" fill="#0f172a"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-5 pt-4 border-t border-slate-700 grid grid-cols-3 gap-3">
+                    <div><p class="text-[9px] text-slate-500 uppercase tracking-widest">Blood</p><p class="text-white font-bold text-sm">O+</p></div>
+                    <div><p class="text-[9px] text-slate-500 uppercase tracking-widest">HLA</p><p class="text-white font-bold text-sm">A2, B27</p></div>
+                    <div><p class="text-[9px] text-slate-500 uppercase tracking-widest">Status</p><p class="text-emerald-400 font-bold text-sm">Active</p></div>
+                </div>
+                <p class="mono text-[10px] text-slate-500 mt-3">Block: #14,207,412 · TxHash: 0x8f3a...c9d2</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeDonorIdModal()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-sm transition-all">Save as Image</button>
+                <button onclick="closeDonorIdModal()" class="flex-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-xl text-sm transition-all">Download PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Execute New Match Modal -->
+<div id="newMatchModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-[fadeUp_0.3s_ease-out_forwards]">
+        <div class="bg-slate-950 p-6 flex items-center justify-between">
+            <div>
+                <h3 class="text-white font-extrabold text-xl tracking-tight">Execute New Match</h3>
+                <p class="text-emerald-400 font-bold text-xs uppercase tracking-widest mt-1">Select Organ Type to Initiate Protocol</p>
+            </div>
+            <button onclick="closeNewMatchModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors border border-slate-700/50">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+        <div class="p-8">
+            <p class="text-slate-500 text-sm font-medium mb-6">The smart contract will query the national donor pool and run ABO/HLA consensus matching for the selected organ type.</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+                <button onclick="selectOrgan(this, 'Kidney')" class="organ-btn flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all group">
+                    <span class="text-2xl">🫁</span>
+                    <span class="text-xs font-bold text-slate-600 group-hover:text-emerald-700 uppercase tracking-widest">Kidney</span>
+                </button>
+                <button onclick="selectOrgan(this, 'Liver')" class="organ-btn flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all group">
+                    <span class="text-2xl">🫀</span>
+                    <span class="text-xs font-bold text-slate-600 group-hover:text-emerald-700 uppercase tracking-widest">Liver</span>
+                </button>
+                <button onclick="selectOrgan(this, 'Heart')" class="organ-btn flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all group">
+                    <span class="text-2xl">❤️</span>
+                    <span class="text-xs font-bold text-slate-600 group-hover:text-emerald-700 uppercase tracking-widest">Heart</span>
+                </button>
+                <button onclick="selectOrgan(this, 'Lung')" class="organ-btn flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all group">
+                    <span class="text-2xl">🫁</span>
+                    <span class="text-xs font-bold text-slate-600 group-hover:text-emerald-700 uppercase tracking-widest">Lung</span>
+                </button>
+                <button onclick="selectOrgan(this, 'Pancreas')" class="organ-btn flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all group">
+                    <span class="text-2xl">🧫</span>
+                    <span class="text-xs font-bold text-slate-600 group-hover:text-emerald-700 uppercase tracking-widest">Pancreas</span>
+                </button>
+                <button onclick="selectOrgan(this, 'Cornea')" class="organ-btn flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all group">
+                    <span class="text-2xl">👁️</span>
+                    <span class="text-xs font-bold text-slate-600 group-hover:text-emerald-700 uppercase tracking-widest">Cornea</span>
+                </button>
+            </div>
+            <div class="flex gap-3">
+                <button id="confirmMatchBtn" onclick="confirmMatch()" disabled class="flex-1 bg-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl transition-all text-sm flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" /></svg>
+                    Confirm & Execute
+                </button>
+                <button onclick="closeNewMatchModal()" class="flex-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3.5 rounded-xl transition-all text-sm">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const role = sessionStorage.getItem('userRole');
+        const name = sessionStorage.getItem('userName');
+
+        if (!role) {
+            // No role = not authenticated, redirect to login
+            window.location.href = 'index.html';
+            return;
+        }
+
+        if (role === 'patient') {
+            document.getElementById('patientDash').classList.remove('hidden');
+            document.getElementById('patientDash').classList.add('flex');
+            document.getElementById('patientName').textContent = name || 'Patient';
+            
+            // Populate ABHA UI Elements
+            const dashAbha = sessionStorage.getItem('abhaId');
+            if (dashAbha) {
+                const pAbha = document.getElementById('dashAbhaProfile');
+                const mAbha = document.getElementById('dashAbhaModal');
+                if (pAbha) pAbha.textContent = dashAbha;
+                if (mAbha) mAbha.textContent = 'ID: ' + dashAbha;
+            }
+        } else if (role === 'admin') {
+            document.getElementById('adminDash').classList.remove('hidden');
+            document.getElementById('adminDash').classList.add('flex');
+            document.getElementById('adminNode').textContent = name || 'ADMIN';
+            
+            document.getElementById('patientNav').classList.remove('md:flex');
+            document.getElementById('patientNav').classList.add('hidden');
+            document.getElementById('adminNav').classList.remove('hidden');
+            document.getElementById('adminNav').classList.add('flex', 'md:flex');
+
+            // Typewriter terminal animation
+            const lines = ['tl-1', 'tl-2', 'tl-3', 'tl-4'];
+            const delays = [600, 1400, 2400, 3200];
+            lines.forEach((id, i) => {
+                setTimeout(() => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.remove('opacity-0');
+                }, delays[i]);
+            });
+        }
+
+        // Security: check URL hash for forced admin access
+        if (window.location.hash === '#admin' && role !== 'admin') {
+            document.getElementById('securityModal').classList.remove('hidden');
+            document.getElementById('securityModal').classList.add('flex');
+        }
+    })();
+
+    let selectedOrgan = null;
+    function openNewMatchModal() {
+        selectedOrgan = null;
+        document.querySelectorAll('.organ-btn').forEach(b => b.classList.remove('border-emerald-500','bg-emerald-50'));
+        document.getElementById('confirmMatchBtn').disabled = true;
+        document.getElementById('newMatchModal').classList.remove('hidden');
+    }
+    function closeNewMatchModal() {
+        document.getElementById('newMatchModal').classList.add('hidden');
+    }
+    function selectOrgan(el, organ) {
+        document.querySelectorAll('.organ-btn').forEach(b => b.classList.remove('border-emerald-500','bg-emerald-50'));
+        el.classList.add('border-emerald-500','bg-emerald-50');
+        selectedOrgan = organ;
+        document.getElementById('confirmMatchBtn').disabled = false;
+    }
+    async function confirmMatch() {
+        closeNewMatchModal();
+        const lines = ['tl-1','tl-2','tl-3','tl-4'];
+        
+        document.getElementById('tl-1').textContent = '[INFO] Querying National Register for ' + selectedOrgan + ' matches...';
+        document.getElementById('tl-2').textContent = '[INFO] Validating ABO/HLA compatibility via AI Engine...';
+        document.getElementById('tl-3').textContent = '[WAIT] Computing viability scores...';
+        document.getElementById('tl-4').className = 'text-slate-500 opacity-0';
+        document.getElementById('bestMatchPanel').classList.add('hidden');
+
+        lines.forEach(id => { const el = document.getElementById(id); if(el) el.classList.add('opacity-0'); });
+        
+        // Client-side AI matching
+        const FIRST_NAMES = ['Aarav','Vivaan','Aditya','Arjun','Sai','Krishna','Ishaan','Ananya','Diya','Saanvi','Kiara','Riya','Prisha','Rohan','Rahul','Vikram','Deepak','Meera','Tara','Kavya'];
+        const LAST_NAMES = ['Sharma','Verma','Patel','Gupta','Singh','Kumar','Reddy','Nair','Iyer','Joshi','Mehta','Das','Rao','Agarwal','Mishra','Shah'];
+        const BLOOD_GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+        const genAbha = () => `${Math.floor(1000+Math.random()*9000)}-${Math.floor(1000+Math.random()*9000)}-${Math.floor(1000+Math.random()*9000)}`;
+        
+        // Generate 5 best matches
+        const bestMatches = [];
+        for(let i = 0; i < 5; i++) {
+            bestMatches.push({
+                name: FIRST_NAMES[Math.floor(Math.random()*FIRST_NAMES.length)] + ' ' + LAST_NAMES[Math.floor(Math.random()*LAST_NAMES.length)],
+                age: 18 + Math.floor(Math.random()*50),
+                bloodGroup: BLOOD_GROUPS[Math.floor(Math.random()*BLOOD_GROUPS.length)],
+                abhaId: genAbha(),
+                viabilityScore: Math.round((95 - i*6 + Math.random()*4) * 10) / 10
+            });
+        }
+        bestMatches.sort((a,b) => b.viabilityScore - a.viabilityScore);
+
+        const viabilityPct = bestMatches[0].viabilityScore;
+        const txHash = '0x' + Array.from({length:16},()=>Math.floor(Math.random()*16).toString(16)).join('');
+
+        setTimeout(() => document.getElementById('tl-1').classList.remove('opacity-0'), 300);
+        setTimeout(() => { document.getElementById('tl-2').textContent = `[INFO] Retrieved ${42 + Math.floor(Math.random()*60)} records. Running AI engine...`; document.getElementById('tl-2').classList.remove('opacity-0'); }, 1100);
+        setTimeout(() => { 
+            const tl3 = document.getElementById('tl-3');
+            tl3.className = 'text-blue-400'; 
+            tl3.textContent = `[OK] ML Viability: ${viabilityPct}%`; 
+        }, 2100);
+        setTimeout(() => { 
+            const tl4 = document.getElementById('tl-4');
+            tl4.className = 'text-emerald-400';
+            tl4.textContent = `[OK] Contract Executed! TxHash: ${txHash.substring(0, 16)}...`;
+
+            // Render Best Match Results Table
+            const tbody = document.getElementById('bestMatchTableBody');
+            tbody.innerHTML = '';
+            bestMatches.forEach((m, i) => {
+                const scoreColor = m.viabilityScore >= 80 ? 'text-emerald-600' : m.viabilityScore >= 60 ? 'text-amber-600' : 'text-red-600';
+                tbody.innerHTML += `<tr class='hover:bg-emerald-50 transition-colors border-b border-slate-100'>
+                    <td class='px-6 py-3 text-sm font-bold text-slate-400'>${i+1}</td>
+                    <td class='px-6 py-3 text-sm font-bold text-slate-800'>${m.name}</td>
+                    <td class='px-6 py-3 text-sm font-semibold text-slate-600'>${m.age}</td>
+                    <td class='px-6 py-3'><span class='bg-rose-100 text-rose-700 font-bold text-xs px-2 py-1 rounded'>${m.bloodGroup}</span></td>
+                    <td class='px-6 py-3 mono text-xs font-bold text-slate-500'>${m.abhaId}</td>
+                    <td class='px-6 py-3 font-extrabold ${scoreColor}'>${m.viabilityScore}%</td>
+                </tr>`;
+            });
+            document.getElementById('matchResultMeta').textContent = `Top 5 of ${bestMatches.length + Math.floor(Math.random()*20)} candidates · ${selectedOrgan}`;
+            document.getElementById('bestMatchPanel').classList.remove('hidden');
+            document.getElementById('bestMatchPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 3000);
+    }
+
+    function openDonorIdModal() {
+        const name = sessionStorage.getItem('userName') || 'Patient';
+        const el = document.getElementById('donorIdName');
+        if (el) el.textContent = name;
+        document.getElementById('donorIdModal').classList.remove('hidden');
+    }
+    function closeDonorIdModal() {
+        document.getElementById('donorIdModal').classList.add('hidden');
+    }
+    function acknowledgeAlert() {
+        const btn = document.getElementById('ackBtn');
+        if (!btn) return;
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Status Confirmed';
+        btn.classList.replace('bg-emerald-600', 'bg-slate-300');
+        btn.classList.replace('hover:bg-emerald-500', '');
+    }
+
+    // ═══════════ Dynamic Admin Stats (Client-Side) ═══════════
+    function loadAdminStats() {
+        const dp = document.getElementById('metricDonorPool');
+        const pm = document.getElementById('metricPendingMatches');
+        const ut = document.getElementById('metricUptime');
+        const nl = document.getElementById('metricNodesLabel');
+        if(dp) dp.textContent = '2,847';
+        if(pm) pm.textContent = '14';
+        if(ut) ut.textContent = '99.7%';
+        if(nl) nl.textContent = '4/5 Nodes Online';
+    }
+    if (sessionStorage.getItem('userRole') === 'admin') {
+        loadAdminStats();
+    }
+
+    // ═══════════ Dynamic System Audit Feed ═══════════
+    const TX_METHODS = ['PLEDGE','MATCH','ENROLL','AUDIT','TRANSFER','VERIFY','REVOKE'];
+    const TX_COLORS = {'PLEDGE':'text-amber-600','MATCH':'text-emerald-600','ENROLL':'text-blue-600','AUDIT':'text-indigo-600','TRANSFER':'text-purple-600','VERIFY':'text-cyan-600','REVOKE':'text-red-600'};
+    const NODES = ['AIIMS-D01','APOLLO-C02','KEM-MUM-03','NIMHANS-B05','PGIMER-CHD','CMC-VLR-04','SYS-CORE-00'];
+    let auditBlock = 14207882;
+    function generateAuditEntry() {
+        auditBlock++;
+        const method = TX_METHODS[Math.floor(Math.random()*TX_METHODS.length)];
+        const node = NODES[Math.floor(Math.random()*NODES.length)];
+        const hash = '0x' + Array.from({length:8}, ()=>Math.floor(Math.random()*16).toString(16)).join('') + '...' + Array.from({length:4}, ()=>Math.floor(Math.random()*16).toString(16)).join('');
+        const ago = Math.floor(Math.random()*300);
+        const agoStr = ago < 60 ? ago + 's ago' : Math.floor(ago/60) + 'm ago';
+        return { method, node, hash, block: auditBlock, ago: agoStr, color: TX_COLORS[method] || 'text-slate-600' };
+    }
+    function renderAuditFeed() {
+        const container = document.querySelector('.scroll-log');
+        if(!container) return;
+        container.innerHTML = '';
+        const entries = [];
+        for(let i = 0; i < 16; i++) entries.push(generateAuditEntry());
+        entries.sort((a,b) => b.block - a.block);
+        // Render twice for infinite scroll loop
+        for(let pass = 0; pass < 2; pass++) {
+            entries.forEach(e => {
+                const row = document.createElement('div');
+                row.className = 'mono text-[11px] text-slate-600 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2';
+                row.innerHTML = `<span class="${e.color} font-bold">${e.method}</span> · ${e.hash} · Block #${e.block.toLocaleString()} · <span class="text-slate-400">${e.ago}</span>`;
+                container.appendChild(row);
+            });
+        }
+    }
+    if (sessionStorage.getItem('userRole') === 'admin') {
+        renderAuditFeed();
+        setInterval(renderAuditFeed, 15000);
+    }
+</script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

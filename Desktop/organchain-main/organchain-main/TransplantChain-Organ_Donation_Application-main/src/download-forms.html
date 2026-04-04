@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Downloads — Secure Asset Vault</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .nav-item { display:inline-flex; align-items:center; white-space:nowrap; flex-shrink:0; height:100%; padding:0 0.65rem; font-size:0.85rem; font-weight:500; color:#cbd5e1; transition:all 0.2s ease-in-out; text-decoration:none; border-bottom:2px solid transparent; }
+        .nav-item:hover { color: #10B981; }
+        .nav-active { color: #10B981; font-weight: 600; border-bottom: 2px solid #10B981; }
+        .nav-num { flex-shrink: 0; white-space: nowrap; margin-right: 4px; }
+        
+        .sidebar-link { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #64748b; transition: all 0.2s; cursor: pointer; }
+        .sidebar-link:hover { background: #f8fafc; color: #0f172a; }
+        .sidebar-link.active { background: #ecfdf5; color: #059669; }
+        
+        .section-anchor { scroll-margin-top: 100px; }
+        
+        /* Thin, elegant scrollbar for data tables */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #94a3b8; }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-600 antialiased overflow-y-scroll selection:bg-emerald-500/30 min-h-screen flex flex-col custom-scrollbar pt-16">
+
+<!-- ── Navigation ── -->
+<header class="fixed top-0 w-full z-[1000] bg-slate-950 border-b border-slate-800 h-16" style="position:fixed;top:0;width:100%;z-index:1000;height:64px;">
+    <nav class="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
+        <a href="dashboard.html" class="flex items-center gap-2 transition-opacity hover:opacity-90">
+            <span class="text-white font-bold tracking-tight text-lg">Tech Knight <span class="text-emerald-500 mx-1">|</span> <span class="font-light text-slate-300">OrganChain</span></span>
+        </a>
+        <div class="flex items-center gap-4 h-full">
+            <ul class="flex items-center h-full gap-1 m-0 p-0 list-none hidden md:flex">
+                <li><a href="dashboard.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="home" class="w-[18px] h-[18px] mr-2"></i><span>Home</span></a></li>
+                <li><a href="about.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="info" class="w-[18px] h-[18px] mr-2"></i><span>About</span></a></li>
+                <li><a href="hospitals.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="building-2" class="w-[18px] h-[18px] mr-2"></i><span>Hospitals</span></a></li>
+                <li><a href="pledge-verification.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="shield-check" class="w-[18px] h-[18px] mr-2"></i><span>Pledge Portal</span></a></li>
+                <li><a href="awareness.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="book-open" class="w-[18px] h-[18px] mr-2"></i><span>Awareness</span></a></li>
+                <li><a href="faqs.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="help-circle" class="w-[18px] h-[18px] mr-2"></i><span>FAQs</span></a></li>
+                <li><a href="download-forms.html" class="nav-item nav-active" style="display:flex; align-items:center;"><i data-lucide="file-text" class="w-[18px] h-[18px] mr-2"></i><span>Download Forms</span></a></li>
+                <li><a href="profile.html" class="nav-item" style="display:flex; align-items:center;"><i data-lucide="user" class="w-[18px] h-[18px] mr-2"></i><span>Profile</span></a></li>
+            </ul>
+            <div class="h-6 w-px bg-slate-700 hidden md:block"></div>
+            <button onclick="sessionStorage.clear(); window.location.href='index.html';" class="text-xs font-bold text-slate-400 hover:text-emerald-500 transition-colors flex items-center gap-1.5 border border-slate-700 hover:border-emerald-500/50 px-3 py-1.5 rounded-lg shrink-0">
+                <i data-lucide="log-out" class="w-[18px] h-[18px]"></i>
+                Logout
+            </button>
+        </div>
+    </nav>
+</header>
+
+<!-- ── Main Content ── -->
+<main class="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 py-8">
+    
+    <!-- Page Header -->
+    <div class="mb-12 flex flex-col items-center text-center mt-8">
+        <div class="flex items-center gap-3 mb-3">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold tracking-widest uppercase bg-emerald-100 text-emerald-800 border border-emerald-200 shadow-sm">NOTTO Standard</span>
+        </div>
+        <h1 class="text-4xl font-extrabold text-slate-950 tracking-tight leading-tight mb-2">Patient Document Registry</h1>
+        <p class="text-slate-500 font-medium text-lg mb-8 max-w-2xl mx-auto">Official National Organ and Tissue Transplant Organization (NOTTO) clinical and legal forms.</p>
+    </div>
+
+    <div class="w-full bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden mb-16">
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse whitespace-nowrap min-w-[900px]">
+                <thead class="bg-slate-900 text-slate-300">
+                    <tr>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest border-r border-slate-800/50 w-16 text-center">#</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest border-r border-slate-800/50 w-32">Form No.</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest border-r border-slate-800/50">Description</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-center w-40">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm">
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">1</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 1</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Application for living donor (near-related)</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_1.pdf','Form_1.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">2</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 2</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Consent for living spousal organ donation</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_2.pdf','Form_2.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">3</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 3</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Application for swap living donor transplantation</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_3.pdf','Form_3.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">4</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 4</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Form of genetic relationship (living donor)</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_4.pdf','Form_4.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">5</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 5</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Consent for spousal near-relationship donation</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_5.pdf','Form_5.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">6</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 6</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Deceased donor pledging form</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_6.pdf','Form_6.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">7</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 7</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Certificate of brain-stem death</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_7.pdf','Form_7.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">8</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 8</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Application form for living donor registration</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_8.pdf','Form_8.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">9</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 9</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Living donor authorization committee certificate</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_9.pdf','Form_9.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 transition-colors bg-white vault-row">
+                        <td class="px-6 py-5 border-r border-slate-100 text-center font-bold text-slate-400">10</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-mono text-[13px] font-bold text-emerald-700">Form 10</td>
+                        <td class="px-6 py-5 border-r border-slate-100 font-sans font-semibold text-slate-800 tracking-tight">Living donor domicile verification</td>
+                        <td class="px-6 py-5 text-center"><button onclick="downloadPdf('/forms/Form_10.pdf','Form_10.pdf')" class="px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-xs font-bold rounded shadow transition-colors inline-block w-full cursor-pointer">Download PDF</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+    function downloadPdf(url, filename) {
+        // Route through Spring Boot backend for proper binary PDF serving
+        const backendUrl = '/api/admin/documents/download?file=' + encodeURIComponent(filename);
+        fetch(backendUrl)
+            .then(r => {
+                if (!r.ok) throw new Error('Download failed');
+                return r.blob();
+            })
+            .then(blob => {
+                const a = document.createElement('a');
+                a.href = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(a.href);
+            })
+            .catch(() => {
+                // Fallback: try direct path
+                fetch(url)
+                    .then(r => r.blob())
+                    .then(blob => {
+                        const a = document.createElement('a');
+                        a.href = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    })
+                    .catch(() => alert('Download failed. Please try again.'));
+            });
+    }
+</script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

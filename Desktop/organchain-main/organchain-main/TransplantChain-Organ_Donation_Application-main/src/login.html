@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Tech Knight | Secure Authentication</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .serif { font-family: 'Playfair Display', serif; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        @keyframes portalIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .portal-animate { animation: portalIn 0.5s ease-out forwards; }
+
+        @keyframes spinner {
+            to { transform: rotate(360deg); }
+        }
+        .spin { animation: spinner 0.6s linear infinite; }
+    </style>
+</head>
+<body class="bg-slate-900 font-sans text-slate-600 antialiased min-h-screen flex flex-col relative overflow-hidden selection:bg-emerald-500/30">
+
+    <!-- Background Gradient / Image -->
+    <div class="absolute inset-0 z-0 opacity-30 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1530497610245-94d3c16cda28?q=80&w=2000&auto=format&fit=crop');"></div>
+    <div class="absolute inset-0 z-0 bg-slate-950/70 backdrop-blur-lg"></div>
+
+    <!-- ── Navigation ── -->
+    <header class="relative z-50 w-full">
+        <nav class="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 transition-opacity hover:opacity-90">
+                <span class="text-white font-extrabold tracking-tight text-xl">Tech Knight <span class="text-emerald-500 mx-1.5 opacity-80">|</span> <span class="font-light text-slate-300">OrganChain</span></span>
+            </a>
+            <div class="flex items-center gap-2">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mono">Network Online</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ── Main Content ── -->
+    <main class="flex-1 w-full flex items-center justify-center p-4 sm:p-6 relative z-10">
+        
+        <!-- Portal Card -->
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] border border-slate-200/50 overflow-hidden relative backdrop-blur-3xl mx-auto portal-animate">
+            <!-- Top Color Bar -->
+            <div class="h-1.5 w-full bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-600"></div>
+
+            <div class="p-6 sm:p-8">
+                <div class="text-center mb-6">
+                    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Login</h1>
+                    <p class="text-slate-500 text-[13px] font-medium">Select your authorized clearance level</p>
+                </div>
+
+                <!-- Sliding Toggle -->
+                <div class="relative bg-slate-100 p-1.5 rounded-xl flex mb-6">
+                    <div id="toggleBg" class="absolute top-1.5 left-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-lg shadow-sm border border-slate-200/60 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"></div>
+                    
+                    <button id="btnPatient" onclick="switchTab('patient')" class="flex-1 relative z-10 py-3 text-[13px] font-bold text-emerald-700 transition-colors duration-300">Patient Access</button>
+                    
+                    <button id="btnAdmin" onclick="switchTab('admin')" class="flex-1 relative z-10 py-3 text-[13px] font-bold text-slate-500 hover:text-slate-800 transition-colors duration-300 flex items-center justify-center gap-2">
+                        Admin Terminal
+                        <div class="group relative flex items-center justify-center" aria-label="Encrypted SSL / AES-256 Active">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Form Container -->
+                <div class="relative w-full min-h-[280px]">
+                    
+                    <!-- Patient Form -->
+                    <div id="formPatient" class="absolute top-0 left-0 w-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] opacity-100 translate-x-0">
+                        <form id="patientForm" onsubmit="handleSubmit(event, this);">
+                            <div class="space-y-4 mb-6">
+                                <div>
+                                    <label class="block text-[11px] font-extrabold text-slate-700 uppercase tracking-widest mb-1.5">Health ID / Email</label>
+                                    <input type="text" id="patientIdentifier" placeholder="ABHA-1234 or Email..." 
+                                           class="w-full bg-slate-50 border border-slate-200 px-4 py-3.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-900 placeholder:text-slate-400 hover:bg-white hover:border-slate-300">
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <label class="block text-[11px] font-extrabold text-slate-700 uppercase tracking-widest">Password</label>
+                                        <a href="#" class="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors">Recover?</a>
+                                    </div>
+                                    <input type="password" id="patientPassword" placeholder="••••••••" 
+                                           class="w-full bg-slate-50 border border-slate-200 px-4 py-3.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-900 placeholder:text-slate-400 hover:bg-white hover:border-slate-300 tracking-widest">
+                                </div>
+                            </div>
+                            
+                            <button type="submit" id="patientBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[15px] py-4 rounded-xl transition-all shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 focus:ring-4 focus:ring-emerald-500/30 active:scale-[0.98] mb-6 flex items-center justify-center gap-2">
+                                <span class="btn-text">Authorize Access</span> 
+                                <svg class="w-4 h-4 btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                                <svg class="w-5 h-5 hidden btn-spinner spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            </button>
+                            
+                            <div class="relative flex items-center justify-center mb-6">
+                                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+                                <div class="relative px-3 bg-white text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Or login via</div>
+                            </div>
+                            
+                            <button type="button" class="w-full bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700 font-bold py-3.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2.5 text-sm focus:ring-4 focus:ring-slate-100 active:scale-[0.98]">
+                                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Aadhaar_Logo.svg/2560px-Aadhaar_Logo.svg.png" class="w-5 h-5 object-contain" alt="Aadhaar">
+                                Aadhaar / Digital ID
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Admin Form -->
+                    <div id="formAdmin" class="absolute top-0 left-0 w-full transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] opacity-0 translate-x-12 pointer-events-none">
+                        <form id="adminForm" onsubmit="handleSubmit(event, this);">
+                            <div class="bg-indigo-50/80 border border-indigo-100/80 rounded-xl p-4 mb-6 flex items-start gap-3">
+                                <svg class="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                                <div>
+                                    <h4 class="text-[10px] font-extrabold text-indigo-900 uppercase tracking-widest mb-1 mt-0.5">Restricted Subnet</h4>
+                                    <p class="text-[11px] font-medium text-indigo-700 leading-relaxed">Admin nodes require cryptographic multisig authorization beyond standard credentials.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4 mb-6">
+                                <div>
+                                    <label class="block text-[11px] font-extrabold text-slate-700 uppercase tracking-widest mb-1.5 flex justify-between items-center">
+                                        Node Credentials <span class="text-slate-400 font-mono text-[9px] bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/50">RSA-2048</span>
+                                    </label>
+                                    <input type="text" id="adminIdentifier" placeholder="Administrator Public Hash" 
+                                           class="w-full bg-slate-50 border border-slate-200 px-4 py-3.5 rounded-xl text-[13px] font-mono focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-900 placeholder:text-slate-400 hover:bg-white hover:border-slate-300">
+                                </div>
+                                <div>
+                                    <input type="password" id="adminPassword" placeholder="Passphrase" 
+                                           class="w-full bg-slate-50 border border-slate-200 px-4 py-3.5 rounded-xl text-[13px] font-mono focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-900 placeholder:text-slate-400 hover:bg-white hover:border-slate-300 tracking-widest">
+                                </div>
+                            </div>
+                            
+                            <button type="button" onclick="connectWeb3(this)" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-[15px] py-4 rounded-xl transition-all shadow-lg hover:shadow-xl focus:ring-4 focus:ring-slate-900/20 active:scale-[0.98] mb-4 flex items-center justify-center gap-2.5 group">
+                                <svg class="btn-icon w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none"><path fill="#E17726" d="M27.426 13.91l-4.708-5.32c-.502-.56-1.52-.71-2.274-.32L2.73 17.56c-.754.39-.754 1.026 0 1.417L20.443 28.27c.754.39 1.77.24 2.273-.32l4.708-5.32c.502-.56.502-1.46 0-2.02M26.436 15l-4.708 5.32-17.712-9.29 17.712-9.29L26.436 7M25.446 16.09l-4.708 5.32-17.712-9.29 17.712-9.29L25.446 8.09"/></svg>
+                                <svg class="btn-spinner hidden animate-spin -ml-1 mr-2 h-5 w-5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                <span class="btn-text">Connect Web3 Wallet</span>
+                            </button>
+                            
+                            <button type="submit" class="w-full bg-slate-100/50 hover:bg-slate-100 text-slate-600 font-bold py-3.5 rounded-xl transition-all flex items-center justify-center text-[13px] border border-slate-200/50 hover:border-slate-300 focus:ring-4 focus:ring-slate-100 active:scale-[0.98]">
+                                <span class="btn-text">Manual Fallback</span>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+            
+            <!-- Footer - Protocol link removed -->
+            <div class="bg-slate-50 border-t border-slate-100 p-5 text-center px-6">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed mb-1">By authenticating, you agree to OrganChain's terms</p>
+                <p class="text-[11px] font-bold text-slate-500">New to OrganChain? <a href="register.html" class="text-emerald-600 font-extrabold hover:text-emerald-700 hover:underline transition-colors">Enroll Now →</a></p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom OTP Modal -->
+    <div id="otpModal" class="fixed inset-0 z-[200] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="cancelOtp()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden portal-animate">
+            <div class="h-1 w-full bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-600"></div>
+            <div class="p-8 text-center">
+                <div class="w-14 h-14 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-emerald-100">
+                    <svg class="w-7 h-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                </div>
+                <h3 class="text-lg font-extrabold text-slate-900 mb-1">Phase 2 Authentication</h3>
+                <p class="text-sm text-slate-500 mb-6">Enter your One-Time Password to verify</p>
+                <input id="otpInput" type="text" maxlength="6" placeholder="Enter 6-digit OTP" value="123456"
+                    class="w-full text-center text-2xl font-bold tracking-[0.5em] bg-slate-50 border-2 border-slate-200 px-4 py-4 rounded-xl focus:outline-none focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-slate-900 placeholder:text-slate-300 placeholder:text-base placeholder:tracking-normal mono"
+                    onkeydown="if(event.key==='Enter')submitOtp()">
+                <p class="text-[11px] text-slate-400 mt-2 font-medium">Demo OTP: <span class="font-bold text-emerald-600 mono">123456</span></p>
+                <button onclick="submitOtp()" class="w-full mt-5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[15px] py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-500/20 hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    Verify OTP
+                </button>
+                <button onclick="cancelOtp()" class="w-full mt-2 text-slate-500 font-bold text-sm py-2 hover:text-slate-800 transition-colors">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let activeRole = 'patient';
+
+        // OTP Modal helpers
+        let otpResolve = null;
+        function showOtpModal() {
+            return new Promise((resolve) => {
+                otpResolve = resolve;
+                const modal = document.getElementById('otpModal');
+                const input = document.getElementById('otpInput');
+                modal.classList.remove('hidden');
+                input.value = '123456';
+                setTimeout(() => input.focus(), 100);
+            });
+        }
+        function submitOtp() {
+            const val = document.getElementById('otpInput').value.trim();
+            document.getElementById('otpModal').classList.add('hidden');
+            if (otpResolve) otpResolve(val || null);
+            otpResolve = null;
+        }
+        function cancelOtp() {
+            document.getElementById('otpModal').classList.add('hidden');
+            if (otpResolve) otpResolve(null);
+            otpResolve = null;
+        }
+
+        // Enhanced handleSubmit with validation
+        async function handleSubmit(e, form) {
+            e.preventDefault();
+
+            // Form validation - check if fields are filled
+            let identifier, password;
+            if (activeRole === 'patient') {
+                identifier = document.getElementById('patientIdentifier').value.trim();
+                password = document.getElementById('patientPassword').value.trim();
+                if (!identifier || !password) {
+                    showToast('Invalid Credentials. Please try again.', 'error');
+                    return;
+                }
+                
+                // Hackathon Link intercept
+                const registeredEmail = localStorage.getItem('registeredEmail');
+                const registeredPassword = localStorage.getItem('registeredPassword');
+                
+                // If the user registered recently via the UI demo, strictly check against those credentials
+                if (registeredEmail && registeredPassword) {
+                    if (identifier !== registeredEmail || password !== registeredPassword) {
+                        showToast('Invalid Credentials. Please try again.', 'error');
+                        return;
+                    }
+                    
+                    // Match found! Fast track to dashboard
+                    sessionStorage.setItem('userRole', 'patient');
+                    sessionStorage.setItem('abhaId', localStorage.getItem('patientABHA') || identifier);
+                    sessionStorage.setItem('userName', localStorage.getItem('patientName') || identifier);
+                    
+                    const btn = form.querySelector('button[type="submit"]');
+                    if (btn) {
+                        const btnText = btn.querySelector('.btn-text');
+                        const btnIcon = btn.querySelector('.btn-icon');
+                        const btnSpinner = btn.querySelector('.btn-spinner');
+                        
+                        if (btnText) btnText.textContent = 'Requesting Auth...';
+                        if (btnIcon) btnIcon.classList.add('hidden');
+                        if (btnSpinner) btnSpinner.classList.remove('hidden');
+                        btn.disabled = true;
+                        btn.classList.add('opacity-80', 'cursor-wait');
+                    }
+                    
+                    showToast('Authentication Successful! Redirecting...', 'success');
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                    return;
+                }
+
+            } else {
+                identifier = document.getElementById('adminIdentifier').value.trim();
+                password = document.getElementById('adminPassword').value.trim();
+                if (!identifier || !password) {
+                    showToast('Please fill in Node Credentials and Passphrase', 'error');
+                    return;
+                }
+            }
+
+            const btn = form.querySelector('button[type="submit"]');
+            if (!btn) { 
+                window.location.href = activeRole === 'admin' ? 'admin-dashboard.html' : 'dashboard.html'; 
+                return; 
+            }
+            
+            const btnText = btn.querySelector('.btn-text');
+            const btnIcon = btn.querySelector('.btn-icon');
+            const btnSpinner = btn.querySelector('.btn-spinner');
+            const originalText = btnText ? btnText.textContent : '';
+            
+            if (btnText) btnText.textContent = 'Requesting Auth...';
+            if (btnIcon) btnIcon.classList.add('hidden');
+            if (btnSpinner) btnSpinner.classList.remove('hidden');
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-wait');
+            
+            try {
+                // ... (rest of your original logic remains unchanged)
+                const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(identifier + password));
+                const hashHex = "0x" + Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+                sessionStorage.setItem('userHash', hashHex);
+
+                let userName = identifier;
+                let backendOnline = false;
+                let validatedAbhaId = identifier;
+
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ abhaId: identifier, password: password, role: activeRole })
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        userName = data.name || identifier;
+                        validatedAbhaId = data.abhaId || identifier;
+                        backendOnline = true;
+                    }
+                } catch (networkErr) {
+                    console.warn('Backend unreachable:', networkErr.message);
+                }
+
+                const otp = await showOtpModal();
+                if (!otp) throw new Error('OTP Canceled');
+                if (otp !== '123456') throw new Error('Invalid OTP — use demo code: 123456');
+
+                if (!backendOnline || !userName || userName === identifier) {
+                    if (activeRole === 'admin') {
+                        userName = 'Administrator';
+                    } else {
+                        userName = identifier.includes('@') 
+                            ? identifier.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+                            : 'Patient ' + identifier.substring(0, Math.min(identifier.length, 8));
+                    }
+                }
+
+                sessionStorage.setItem('userRole', activeRole);
+                sessionStorage.setItem('abhaId', validatedAbhaId);
+                sessionStorage.setItem('userName', userName);
+                sessionStorage.setItem('pledgeName', userName);
+                sessionStorage.setItem('pledgeAbha', validatedAbhaId);
+
+                if (activeRole === 'admin') {
+                    const jwtHeader = btoa(JSON.stringify({alg:'HS256',typ:'JWT'}));
+                    const jwtPayload = btoa(JSON.stringify({
+                        sub: identifier,
+                        role: 'ADMIN',
+                        iat: Math.floor(Date.now()/1000),
+                        exp: Math.floor(Date.now()/1000) + 3600,
+                        iss: 'organchain-auth'
+                    }));
+                    const jwtSig = hashHex.substring(2, 46);
+                    const adminJWT = jwtHeader + '.' + jwtPayload + '.' + jwtSig;
+                    sessionStorage.setItem('adminJWT', adminJWT);
+                    sessionStorage.setItem('adminLoginTime', new Date().toISOString());
+                }
+
+                if (activeRole === 'patient') {
+                    sessionStorage.setItem('pledgeEmail', identifier.includes('@') ? identifier : identifier + '@domain.com');
+                    sessionStorage.setItem('pledgePhone', '+91 98765 43210');
+                    sessionStorage.setItem('pledgeDob', '1995-08-15');
+                    sessionStorage.setItem('pledgeAge', '30');
+                    sessionStorage.setItem('pledgeGender', 'Female');
+                    sessionStorage.setItem('pledgeBloodGroup', 'O+');
+                    sessionStorage.setItem('pledgeStatus', 'CONFIRMED');
+                    sessionStorage.setItem('pledgeOrganBitmap', '127');
+                    sessionStorage.setItem('pledgeTxHash', '0x89b2c4f1a3e7d9c2b4f6a8e1d3c5b7a9e2f4d6c8e3f9a2b1c4d5e6f7a8b9c0d1');
+                    sessionStorage.setItem('documentSHA256', hashHex);
+                }
+                
+                showToast('Authentication Successful! Redirecting...', 'success');
+                setTimeout(() => { 
+                    window.location.href = activeRole === 'admin' ? 'admin-dashboard.html' : 'dashboard.html'; 
+                }, 1000);
+            } catch (err) {
+                resetBtn(btn, btnText, btnIcon, btnSpinner, originalText);
+                showToast(err.message || 'Authentication failed. Check your credentials.', 'error');
+            }
+        }
+
+        async function connectWeb3(btn) {
+            // ... (your original connectWeb3 function remains unchanged)
+            const btnText = btn.querySelector('.btn-text');
+            const btnIcon = btn.querySelector('.btn-icon');
+            const btnSpinner = btn.querySelector('.btn-spinner');
+            const originalText = btnText ? btnText.textContent : '';
+            
+            if (btnText) btnText.textContent = 'Requesting Auth...';
+            if (btnIcon) btnIcon.classList.add('hidden');
+            if (btnSpinner) btnSpinner.classList.remove('hidden');
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-wait');
+
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    showToast('Signature Verified', 'success');
+                    sessionStorage.setItem('userRole', 'admin');
+                    sessionStorage.setItem('userName', 'AIIMS-DELHI-01');
+                    setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 1000);  // Fixed to admin dashboard
+                } catch (error) {
+                    resetBtn(btn, btnText, btnIcon, btnSpinner, originalText);
+                    showToast('Connection rejected or failed.', 'error');
+                }
+            } else {
+                resetBtn(btn, btnText, btnIcon, btnSpinner, originalText);
+                showToast('No Web3 Provider Detected. Please install MetaMask to access Admin Terminal.', 'error');
+            }
+        }
+        
+        function resetBtn(btn, btnText, btnIcon, btnSpinner, text) {
+            if (btnText) btnText.textContent = text;
+            if (btnIcon) btnIcon.classList.remove('hidden');
+            if (btnSpinner) btnSpinner.classList.add('hidden');
+            btn.disabled = false;
+            btn.classList.remove('opacity-80', 'cursor-wait');
+        }
+        
+        function showToast(message, type) {
+            const existingToast = document.getElementById('web3Toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'web3Toast';
+            toast.className = `fixed top-6 right-6 px-5 py-3.5 rounded-xl shadow-2xl font-bold text-sm transform transition-all duration-300 translate-y-[-100%] opacity-0 z-[100] flex items-center gap-3 max-w-[400px] leading-tight ${type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-red-50 border border-red-200 text-red-800'}`;
+            
+            const icon = type === 'success' 
+                ? '<svg class="w-5 h-5 shrink-0 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'
+                : '<svg class="w-5 h-5 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>';
+                
+            toast.innerHTML = icon + `<div>${message}</div>`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.remove('translate-y-[-100%]', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-[-100%]', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function switchTab(tab) {
+            activeRole = tab;
+            const toggleBg = document.getElementById('toggleBg');
+            const btnPatient = document.getElementById('btnPatient');
+            const btnAdmin = document.getElementById('btnAdmin');
+            
+            const formPatient = document.getElementById('formPatient');
+            const formAdmin = document.getElementById('formAdmin');
+            
+            if (tab === 'patient') {
+                toggleBg.style.transform = 'translateX(0)';
+                btnPatient.classList.remove('text-slate-500');
+                btnPatient.classList.add('text-emerald-700');
+                btnAdmin.classList.add('text-slate-500');
+                btnAdmin.classList.remove('text-emerald-700');
+                
+                formAdmin.classList.remove('opacity-100', 'translate-x-0');
+                formAdmin.classList.add('opacity-0', 'translate-x-12', 'pointer-events-none');
+                
+                setTimeout(() => {
+                    formPatient.classList.remove('opacity-0', '-translate-x-12', 'pointer-events-none');
+                    formPatient.classList.add('opacity-100', 'translate-x-0');
+                }, 50); 
+            } else {
+                toggleBg.style.transform = 'translateX(100%)';
+                btnAdmin.classList.remove('text-slate-500');
+                btnAdmin.classList.add('text-emerald-700');
+                btnPatient.classList.add('text-slate-500');
+                btnPatient.classList.remove('text-emerald-700');
+                
+                formPatient.classList.remove('opacity-100', 'translate-x-0');
+                formPatient.classList.add('opacity-0', '-translate-x-12', 'pointer-events-none');
+                
+                setTimeout(() => {
+                    formAdmin.classList.remove('opacity-0', 'translate-x-12', 'pointer-events-none');
+                    formAdmin.classList.add('opacity-100', 'translate-x-0');
+                }, 50);
+            }
+        }
+    </script>
+</body>
+</html>

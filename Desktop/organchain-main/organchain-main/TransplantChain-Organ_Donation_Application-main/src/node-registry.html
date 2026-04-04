@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Node Registry — OrganChain Admin</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .nav-item { display:flex; align-items:center; height:100%; padding:0 1rem; font-size:0.875rem; font-weight:400; color:#cbd5e1; transition:color 0.2s; text-decoration:none; border-bottom:2px solid transparent; }
+        .nav-item:hover { color:#fff; }
+        .nav-active { color:#fff; font-weight:600; border-bottom:2px solid #10B981; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+        .fade-up { animation: fadeUp 0.5s ease-out forwards; }
+        .fade-up-d1 { animation-delay: 0.1s; opacity:0; }
+        .fade-up-d2 { animation-delay: 0.2s; opacity:0; }
+        @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+        .pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes drawLine { to { stroke-dashoffset: -100; } }
+        .animate-draw { stroke-dasharray: 40; stroke-dashoffset: 0; animation: drawLine 1.5s linear infinite; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+<!-- Admin Nav -->
+<header style="background:#0F172A; border-bottom:1px solid #1e293b;" class="shrink-0 z-50 sticky top-0">
+    <nav class="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="dashboard.html" class="flex items-center gap-2 transition-opacity hover:opacity-90">
+            <span class="text-white font-bold tracking-tight text-lg">Tech Knight <span class="text-emerald-500 mx-1">|</span> <span class="font-light text-slate-300">OrganChain</span></span>
+        </a>
+        <div class="flex items-center gap-4">
+            <ul class="flex items-center h-full gap-1 m-0 p-0 list-none hidden md:flex">
+                <li><a href="dashboard.html" class="nav-item"><svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Dashboard</a></li>
+                <li><a href="node-registry.html" class="nav-item nav-active">Node Registry</a></li>
+                <li><a href="audit-ledger.html" class="nav-item">Audit Ledger</a></li>
+                <li><a href="match-archive.html" class="nav-item">Match Archive</a></li>
+                <li><a href="security-logs.html" class="nav-item">Security Logs</a></li>
+            </ul>
+            <div class="h-6 w-px bg-slate-700 hidden md:block"></div>
+            <button onclick="sessionStorage.clear(); window.location.href='index.html';" class="text-xs font-bold text-slate-400 hover:text-red-400 transition-colors flex items-center gap-1.5 border border-slate-700 hover:border-red-500/50 px-3 py-1.5 rounded-lg">
+                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>
+                Logout
+            </button>
+        </div>
+    </nav>
+</header>
+
+<main class="w-full max-w-[1400px] mx-auto px-6 py-10 flex-1">
+    
+    <div class="flex items-center justify-between mb-8 fade-up">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Node Registry</h1>
+            <p class="text-slate-500 font-medium">Global hospital server health and cryptographic sync status.</p>
+        </div>
+        <button class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm px-6 py-2.5 rounded-xl transition-all shadow-md flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+            Force Global Sync
+        </button>
+    </div>
+
+    <!-- Metrics Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10 fade-up">
+        <!-- Metric 1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 overflow-hidden relative">
+            <div class="absolute -right-4 -top-4 w-20 h-20 bg-slate-50 rounded-full"></div>
+            <div class="flex items-center gap-3 mb-2 relative z-10">
+                <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Total Registered Nodes</span>
+            </div>
+            <div class="text-3xl font-extrabold text-slate-900 tracking-tight relative z-10">142</div>
+            <div class="text-xs font-semibold text-emerald-600 mt-1 relative z-10">↑ 3 New Nodes (7d)</div>
+        </div>
+        
+        <!-- Metric 2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 overflow-hidden relative">
+            <div class="absolute -right-4 -top-4 w-20 h-20 bg-slate-50 rounded-full"></div>
+            <div class="flex items-center gap-3 mb-2 relative z-10">
+                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Avg. Network Latency</span>
+            </div>
+            <div class="text-3xl font-extrabold text-slate-900 tracking-tight relative z-10 mono">42<span class="text-lg text-slate-400">ms</span></div>
+            <div class="text-xs font-semibold text-slate-400 mt-1 relative z-10">Stable connection</div>
+        </div>
+        
+        <!-- Metric 2.5: Map -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 overflow-hidden relative flex flex-col justify-between">
+            <div class="flex items-center gap-3 mb-2 relative z-10">
+                <div class="w-2 h-2 rounded-full bg-slate-800"></div>
+                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Network Distribution</span>
+            </div>
+            <div class="relative w-full flex-1 flex items-center justify-center mt-2 opacity-80 mix-blend-multiply">
+                <svg viewBox="0 0 100 100" class="w-auto h-20 filter drop-shadow">
+                    <path fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5" stroke-linejoin="round" d="M35,10 L45,5 L60,15 L75,30 L85,45 L80,60 L60,95 L50,100 L40,90 L25,60 L15,40 L15,25 L25,20 Z" />
+                    <circle cx="45" cy="25" r="3.5" class="fill-emerald-500" />
+                    <circle cx="45" cy="25" r="3.5" class="fill-emerald-400 animate-ping opacity-75" />
+                    <circle cx="30" cy="55" r="3" class="fill-emerald-500" />
+                    <circle cx="30" cy="55" r="3" class="fill-emerald-400 animate-ping opacity-75" style="animation-delay: 0.5s;" />
+                    <circle cx="40" cy="80" r="3.5" class="fill-emerald-500" />
+                    <circle cx="40" cy="80" r="3.5" class="fill-emerald-400 animate-ping opacity-75" style="animation-delay: 1s;" />
+                    <circle cx="55" cy="75" r="3" class="fill-emerald-500" />
+                    <circle cx="55" cy="75" r="3" class="fill-emerald-400 animate-ping opacity-75" style="animation-delay: 1.5s;" />
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Metric 3 -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 overflow-hidden relative">
+            <div class="absolute -right-4 -top-4 w-20 h-20 bg-slate-50 rounded-full"></div>
+            <div class="flex items-center gap-3 mb-2 relative z-10">
+                <div class="w-2 h-2 rounded-full bg-indigo-500 pulse-dot"></div>
+                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Global Sync Rate</span>
+            </div>
+            <div class="text-3xl font-extrabold text-slate-900 tracking-tight relative z-10">99.9<span class="text-lg text-slate-400">%</span></div>
+            <div class="text-xs font-semibold text-emerald-600 mt-1 relative z-10">Target: 99.9% achieved</div>
+        </div>
+        
+        <!-- Metric 4 -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 overflow-hidden relative">
+            <div class="absolute -right-4 -top-4 w-20 h-20 bg-slate-50 rounded-full"></div>
+            <div class="flex items-center gap-3 mb-2 relative z-10">
+                <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Active Block Height</span>
+            </div>
+            <div class="text-2xl font-extrabold text-slate-900 tracking-tight relative z-10 mono pt-1">#14,207,882</div>
+            <div class="text-xs font-semibold text-emerald-600 mt-1 relative z-10">Last forged 4s ago</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Table Area -->
+        <div class="lg:col-span-2 space-y-6 fade-up fade-up-d1">
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+                    <h2 class="font-bold text-slate-800">Node Directory</h2>
+                    <div class="relative">
+                        <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+                        <input type="text" placeholder="Search Node ID or Region..." class="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 w-64 transition-all placeholder:text-slate-400 font-medium">
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200">
+                                <th class="py-3 px-6 text-[10px] uppercase font-extrabold text-slate-500 tracking-wider">Node ID</th>
+                                <th class="py-3 px-6 text-[10px] uppercase font-extrabold text-slate-500 tracking-wider">Facility</th>
+                                <th class="py-3 px-6 text-[10px] uppercase font-extrabold text-slate-500 tracking-wider">Latency</th>
+                                <th class="py-3 px-6 text-[10px] uppercase font-extrabold text-slate-500 tracking-wider">Sync Status</th>
+                                <th class="py-3 px-6 text-[10px] uppercase font-extrabold text-slate-500 tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-slate-100">
+                            <!-- Node 1 -->
+                            <tr class="hover:bg-slate-50/80 transition-colors bg-emerald-50/20 cursor-pointer" onclick="selectNode('AIIMS-DEL-01')">
+                                <td class="py-4 px-6 font-bold text-slate-900 mono text-xs">AIIMS-DEL-01</td>
+                                <td class="py-4 px-6">
+                                    <div class="font-bold text-slate-800">All India Institute of Medical Sciences</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">Delhi, National Capital Region</div>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 mono">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> 12ms
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden w-24"><div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div></div>
+                                        <span class="text-[11px] font-bold text-emerald-600 mono">100%</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <button class="text-slate-400 hover:text-emerald-600 transition-colors p-1" title="Ping Node"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg></button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Node 2 -->
+                            <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer" onclick="selectNode('PGIMER-CHD-02')">
+                                <td class="py-4 px-6 font-bold text-slate-900 mono text-xs">PGIMER-CHD-02</td>
+                                <td class="py-4 px-6">
+                                    <div class="font-bold text-slate-800">PGIMER Hospital</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">Chandigarh</div>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 mono">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> 28ms
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden w-24"><div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div></div>
+                                        <span class="text-[11px] font-bold text-emerald-600 mono">100%</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <button class="text-slate-400 hover:text-emerald-600 transition-colors p-1" title="Ping Node"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg></button>
+                                </td>
+                            </tr>
+
+                            <!-- Node 3 -->
+                            <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer" onclick="selectNode('CMC-VLR-04')">
+                                <td class="py-4 px-6 font-bold text-slate-900 mono text-xs">CMC-VLR-04</td>
+                                <td class="py-4 px-6">
+                                    <div class="font-bold text-slate-800">Christian Medical College</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">Vellore, Tamil Nadu</div>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-100 mono">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-amber-500 pulse-dot"></div> 86ms
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden w-24"><div class="h-full bg-amber-500 rounded-full" style="width: 99.8%;"></div></div>
+                                        <span class="text-[11px] font-bold text-amber-600 mono">99.8%</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <button class="text-slate-400 hover:text-amber-600 transition-colors p-1" title="Ping Node"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg></button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Node 4 -->
+                            <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer opacity-70" onclick="selectNode('NIMHANS-BLR-05')">
+                                <td class="py-4 px-6 font-bold text-slate-900 mono text-xs">NIMHANS-BLR-05</td>
+                                <td class="py-4 px-6">
+                                    <div class="font-bold text-slate-800">NIMHANS Facility</div>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">Bangalore, Karnataka</div>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-bold bg-red-50 text-red-700 border border-red-100 mono">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-red-500"></div> Timeout
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden w-24"><div class="h-full bg-red-500 rounded-full" style="width: 86.4%;"></div></div>
+                                        <span class="text-[11px] font-bold text-red-600 mono">86.4%</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <button class="text-slate-400 hover:text-red-600 transition-colors p-1" title="Ping Node"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Active Network Incidents -->
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden mt-6">
+                <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    <h2 class="font-bold text-slate-800">Active Network Incidents</h2>
+                </div>
+                <div class="divide-y divide-slate-100">
+                    <div class="p-6 hover:bg-slate-50/50 transition-colors cursor-default">
+                        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                            <div>
+                                <h3 class="font-bold text-slate-900 mono text-sm flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-red-500 animate-[pulse-dot_1.5s_infinite]"></div> NIMHANS-BLR-05 <span class="text-slate-500 font-medium font-sans">Node Timeout</span></h3>
+                                <p class="text-sm text-slate-600 mt-1 max-w-xl leading-relaxed">Failed to respond to P2P handshake requests for 3 consecutive epochs. Sync stalled at Block <span class="mono text-slate-500 font-bold bg-slate-100 px-1 rounded">#14,207,811</span>.</p>
+                            </div>
+                            <span class="text-[11px] font-extrabold text-slate-400 mono shrink-0 bg-slate-100 px-2 py-1 rounded">2026-03-24 10:48 UTC</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Hardware Monitoring -->
+        <div class="lg:col-span-1 fade-up fade-up-d2">
+            <div class="bg-slate-950 rounded-2xl shadow-xl overflow-hidden sticky top-24 border border-slate-800 relative shadow-emerald-900/10">
+                <!-- Top Header -->
+                <div class="bg-slate-900 border-b border-slate-800 p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Hardware Telemetry</span>
+                        <span class="text-[10px] font-extrabold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded uppercase tracking-widest flex items-center gap-1.5"><div class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div> Live</span>
+                    </div>
+                    <h3 id="hw-node-id" class="text-white font-extrabold text-xl mono tracking-tight">AIIMS-DEL-01</h3>
+                    <p id="hw-node-loc" class="text-slate-400 text-sm mt-0.5">Delhi, National Capital Region</p>
+                </div>
+                
+                <!-- Metrics -->
+                <div class="p-6 space-y-6">
+                    <!-- CPU -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">CPU Allocation</span>
+                                <svg class="w-10 h-3 stroke-emerald-500 animate-draw fill-none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 100 30"><path d="M0,25 L15,10 L30,15 L45,5 L60,20 L75,10 L100,20" /></svg>
+                            </div>
+                            <span id="hw-cpu-val" class="text-sm font-bold text-white mono">24.5%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="hw-cpu-bar" class="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-1000" style="width: 24.5%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- RAM -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Memory (RAM)</span>
+                                <svg class="w-10 h-3 stroke-emerald-500 animate-draw fill-none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 100 30"><path d="M0,15 L20,20 L40,10 L60,15 L80,5 L100,10" /></svg>
+                            </div>
+                            <span id="hw-ram-val" class="text-sm font-bold text-white mono">14.1 / 32 GB</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="hw-ram-bar" class="h-full bg-indigo-500 transition-all duration-1000" style="width: 44%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Storage -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Ledger Storage</span>
+                            <span id="hw-disk-val" class="text-sm font-bold text-white mono">1.2 / 4 TB</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="hw-disk-bar" class="h-full bg-blue-500 transition-all duration-1000" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="pt-4 border-t border-slate-800 mt-6 grid grid-cols-2 gap-3">
+                        <button class="bg-slate-800 hover:bg-slate-700 text-white text-[11px] font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors focus:ring-2 focus:ring-slate-700">Audit Logs</button>
+                        <button onclick="triggerHalt()" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 text-[11px] font-bold uppercase tracking-wider py-2.5 rounded-lg transition-colors border border-red-500/20 focus:ring-2 focus:ring-red-500/30">Halt Node</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- Multi-Sig Halt Modal -->
+<div id="haltModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-2xl shadow-2xl border border-red-500/30 max-w-md w-full p-8 text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-red-500/5 pulse-dot pointer-events-none"></div>
+        <div class="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mx-auto mb-5 relative z-10">
+            <svg class="w-8 h-8 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+        </div>
+        <h3 class="text-xl font-extrabold text-white mb-2 relative z-10">Cryptographic Halt</h3>
+        <p class="text-sm text-slate-400 font-medium mb-6 relative z-10">Initiating forced offline protocol for <span id="halt-node-target" class="mono text-white font-bold bg-slate-800 px-1 py-0.5 rounded"></span>. Multi-sig validation required.</p>
+        
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-left relative z-10 mb-6 shadow-inner">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold text-slate-400 p-0 text-left uppercase tracking-widest">Governance Signature</span>
+                <span id="multisig-status" class="text-[11px] font-extrabold text-amber-400 mono">0/3 Verified</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mb-3">
+                <div id="multisig-bar" class="h-full bg-amber-500 w-0 transition-all duration-1000 relative overflow-hidden shadow-[0_0_10px_rgba(245,158,11,0.5)]">
+                    <div class="absolute inset-0 bg-white/20 w-8 blur-sm translate-x-12"></div>
+                </div>
+            </div>
+            <div class="text-[11px] text-slate-400 mono flex items-center gap-2 p-0 text-left">
+                <svg id="multisig-spinner" class="w-3.5 h-3.5 animate-spin text-amber-500 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span id="multisig-text" class="leading-tight">Gathering P2P Consensus...</span>
+            </div>
+        </div>
+
+        <div class="mb-6 relative z-10 text-left">
+            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 block">Emergency Authorization Key</label>
+            <input type="password" placeholder="••••••••••••" class="w-full bg-slate-950 border border-slate-700 text-white text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors font-mono tracking-widest placeholder:text-slate-600">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 relative z-10 mt-2">
+            <button onclick="document.getElementById('haltModal').classList.add('hidden')" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition-all text-sm border border-slate-700 text-center">Abort execution</button>
+            <button id="btnConfirmHalt" disabled class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-all shadow-lg text-sm border border-red-500 text-center disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-600">Confirm Halt</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function triggerHalt() {
+        document.getElementById('halt-node-target').textContent = document.getElementById('hw-node-id').textContent;
+        document.getElementById('haltModal').classList.remove('hidden');
+        
+        const bar = document.getElementById('multisig-bar');
+        const status = document.getElementById('multisig-status');
+        const textArea = document.getElementById('multisig-text');
+        const btn = document.getElementById('btnConfirmHalt');
+        const spinner = document.getElementById('multisig-spinner');
+        
+        // Reset state
+        bar.style.width = '0%';
+        bar.className = 'h-full bg-amber-500 w-0 transition-all duration-1000 relative overflow-hidden shadow-[0_0_10px_rgba(245,158,11,0.5)]';
+        status.textContent = '0/3 Verified';
+        status.className = 'text-[11px] font-extrabold text-amber-400 mono';
+        textArea.textContent = 'Gathering P2P Consensus...';
+        spinner.classList.remove('hidden');
+        btn.disabled = true;
+        
+        setTimeout(() => {
+            bar.style.width = '33%';
+            status.textContent = '1/3 Verified';
+        }, 800);
+        
+        setTimeout(() => {
+            bar.style.width = '66%';
+            status.textContent = '2/3 Verified';
+        }, 1600);
+        
+        setTimeout(() => {
+            bar.style.width = '100%';
+            bar.classList.replace('bg-amber-500', 'bg-emerald-500');
+            bar.classList.replace('shadow-[0_0_10px_rgba(245,158,11,0.5)]', 'shadow-[0_0_10px_rgba(16,185,129,0.5)]');
+            status.textContent = '3/3 Verified';
+            status.classList.replace('text-amber-400', 'text-emerald-400');
+            textArea.textContent = 'Consensus Achieved. Ready for authorization.';
+            spinner.classList.add('hidden');
+            btn.disabled = false;
+        }, 2400);
+    }
+    // Security check for auth
+    if (!sessionStorage.getItem('userRole') || sessionStorage.getItem('userRole') !== 'admin') {
+        window.location.href = 'login.html';
+    }
+
+    function selectNode(id) {
+        document.querySelectorAll('tr').forEach(tr => tr.classList.remove('bg-emerald-50/20'));
+        event.currentTarget.classList.add('bg-emerald-50/20');
+
+        const hwId = document.getElementById('hw-node-id');
+        const hwLoc = document.getElementById('hw-node-loc');
+        const cpuBar = document.getElementById('hw-cpu-bar');
+        const cpuVal = document.getElementById('hw-cpu-val');
+        const ramBar = document.getElementById('hw-ram-bar');
+        const ramVal = document.getElementById('hw-ram-val');
+        const diskBar = document.getElementById('hw-disk-bar');
+        const diskVal = document.getElementById('hw-disk-val');
+
+        hwId.textContent = id;
+
+        if(id === 'AIIMS-DEL-01') {
+            hwLoc.textContent = 'Delhi, National Capital Region';
+            cpuBar.style.width = '24.5%'; cpuBar.className = 'h-full shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-1000 bg-emerald-500'; cpuVal.textContent = '24.5%';
+            ramBar.style.width = '44%'; ramVal.textContent = '14.1 / 32 GB';
+            diskBar.style.width = '30%'; diskVal.textContent = '1.2 / 4 TB';
+        } else if(id === 'PGIMER-CHD-02') {
+            hwLoc.textContent = 'Chandigarh';
+            cpuBar.style.width = '42%'; cpuBar.className = 'h-full transition-all duration-1000 bg-emerald-500'; cpuVal.textContent = '42.0%';
+            ramBar.style.width = '60%'; ramVal.textContent = '19.2 / 32 GB';
+            diskBar.style.width = '35%'; diskVal.textContent = '1.4 / 4 TB';
+        } else if(id === 'CMC-VLR-04') {
+            hwLoc.textContent = 'Vellore, Tamil Nadu';
+            cpuBar.style.width = '86%'; cpuBar.className = 'h-full shadow-[0_0_10px_rgba(245,158,11,0.5)] transition-all duration-1000 bg-amber-500'; cpuVal.textContent = '86.0%';
+            ramBar.style.width = '88%'; ramVal.textContent = '28.1 / 32 GB';
+            diskBar.style.width = '30%'; diskVal.textContent = '1.2 / 4 TB';
+        } else {
+            hwLoc.textContent = 'Bangalore, Karnataka';
+            cpuBar.style.width = '100%'; cpuBar.className = 'h-full shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-1000 bg-red-500'; cpuVal.textContent = '100% (STALLED)';
+            ramBar.style.width = '100%'; ramVal.textContent = '32.0 / 32 GB';
+            diskBar.style.width = '86%'; diskVal.textContent = '3.4 / 4 TB';
+        }
+    }
+</script>
+</body>
+</html>

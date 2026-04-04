@@ -1,0 +1,11 @@
+
+node_modules/
+build/
+target/
+*.log
+*.zip
+.idea/
+.vscode/
+__pycache__/
+*.class
+.flattened-pom.xml

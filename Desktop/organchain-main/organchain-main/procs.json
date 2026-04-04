@@ -1,0 +1,18 @@
+﻿[
+    {
+        "ProcessId":  20240,
+        "CommandLine":  "C:\\Users\\fazfa\\AppData\\Local\\Programs\\Python\\Python313\\python.exe c:\\Users\\fazfa\\.antigravity\\extensions\\ms-python.python-2026.4.0-universal\\python_files\\run-jedi-language-server.py"
+    },
+    {
+        "ProcessId":  3128,
+        "CommandLine":  "C:\\Users\\fazfa\\AppData\\Local\\Programs\\Python\\Python313\\python.exe c:\\Users\\fazfa\\.antigravity\\extensions\\ms-python.python-2026.4.0-universal\\python_files\\lib\\jedilsp\\jedi\\inference\\compiled\\subprocess\\__main__.py c:\\Users\\fazfa\\.antigravity\\extensions\\ms-python.python-2026.4.0-universal\\python_files\\lib\\jedilsp 3.13.7"
+    },
+    {
+        "ProcessId":  15760,
+        "CommandLine":  "\"C:\\Program Files\\nodejs\\\\node.exe\"  \"C:\\Users\\fazfa\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npx-cli.js\" ganache --port 7545"
+    },
+    {
+        "ProcessId":  11228,
+        "CommandLine":  "\"node\"   \"C:\\Users\\fazfa\\AppData\\Roaming\\npm\\\\node_modules\\ganache\\dist\\node\\cli.js\" --port 7545"
+    }
+]

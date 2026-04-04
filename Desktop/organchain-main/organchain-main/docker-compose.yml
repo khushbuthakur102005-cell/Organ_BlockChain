@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  ganache:
+    image: trufflesuite/ganache:latest
+    ports:
+      - "7545:8545"
+    networks:
+      - organchain_net
+    command: ["--wallet.seed", "organchain", "--chain.chainId", "1337"]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - WEB3_RPC_URL=http://ganache:8545
+      # Make sure to update production env variables here or via .env
+    networks:
+      - organchain_net
+    depends_on:
+      - ganache
+
+  flask_service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - organchain_net
+
+  frontend:
+    build:
+      context: ./TransplantChain-Organ_Donation_Application-main
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - organchain_net
+    depends_on:
+      - backend
+      - flask_service
+
+networks:
+  organchain_net:
+    driver: bridge

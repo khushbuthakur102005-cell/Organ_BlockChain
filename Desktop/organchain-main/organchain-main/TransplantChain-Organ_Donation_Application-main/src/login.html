@@ -229,168 +229,134 @@
         async function handleSubmit(e, form) {
             e.preventDefault();
 
-            // Form validation - check if fields are filled
             let identifier, password;
+
+            // ── PATIENT LOGIC ──
             if (activeRole === 'patient') {
                 identifier = document.getElementById('patientIdentifier').value.trim();
                 password = document.getElementById('patientPassword').value.trim();
+                
                 if (!identifier || !password) {
                     showToast('Invalid Credentials. Please try again.', 'error');
                     return;
                 }
                 
-                // Hackathon Link intercept
                 const registeredEmail = localStorage.getItem('registeredEmail');
                 const registeredPassword = localStorage.getItem('registeredPassword');
                 
-                // If the user registered recently via the UI demo, strictly check against those credentials
                 if (registeredEmail && registeredPassword) {
                     if (identifier !== registeredEmail || password !== registeredPassword) {
                         showToast('Invalid Credentials. Please try again.', 'error');
                         return;
                     }
-                    
-                    // Match found! Fast track to dashboard
+                }
+
+                const btn = form.querySelector('button[type="submit"]');
+                const btnText = btn?.querySelector('.btn-text');
+                const btnIcon = btn?.querySelector('.btn-icon');
+                const btnSpinner = btn?.querySelector('.btn-spinner');
+                const originalText = btnText ? btnText.textContent : 'Authenticate';
+
+                if (btn) {
+                    if (btnText) btnText.textContent = 'Requesting Auth...';
+                    if (btnIcon) btnIcon.classList.add('hidden');
+                    if (btnSpinner) btnSpinner.classList.remove('hidden');
+                    btn.disabled = true;
+                    btn.classList.add('opacity-80', 'cursor-wait');
+                }
+
+                try {
+                    const otp = await showOtpModal();
+                    if (!otp) throw new Error('OTP Canceled');
+                    if (otp !== '123456') throw new Error('Invalid OTP — use demo code: 123456');
+
                     sessionStorage.setItem('userRole', 'patient');
                     sessionStorage.setItem('abhaId', localStorage.getItem('patientABHA') || identifier);
                     sessionStorage.setItem('userName', localStorage.getItem('patientName') || identifier);
-                    
-                    const btn = form.querySelector('button[type="submit"]');
-                    if (btn) {
-                        const btnText = btn.querySelector('.btn-text');
-                        const btnIcon = btn.querySelector('.btn-icon');
-                        const btnSpinner = btn.querySelector('.btn-spinner');
-                        
-                        if (btnText) btnText.textContent = 'Requesting Auth...';
-                        if (btnIcon) btnIcon.classList.add('hidden');
-                        if (btnSpinner) btnSpinner.classList.remove('hidden');
-                        btn.disabled = true;
-                        btn.classList.add('opacity-80', 'cursor-wait');
-                    }
+                    localStorage.setItem('hasLoggedIn', 'true');
                     
                     showToast('Authentication Successful! Redirecting...', 'success');
                     setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
-                    return;
+                } catch (err) {
+                    resetBtn(btn, btnText, btnIcon, btnSpinner, originalText);
+                    showToast(err.message, 'error');
                 }
+                return; 
+            }
 
-            } else {
+            // ── ADMIN LOGIC ──
+            if (activeRole === 'admin') {
                 identifier = document.getElementById('adminIdentifier').value.trim();
                 password = document.getElementById('adminPassword').value.trim();
+                
                 if (!identifier || !password) {
                     showToast('Please fill in Node Credentials and Passphrase', 'error');
                     return;
                 }
-            }
 
-            const btn = form.querySelector('button[type="submit"]');
-            if (!btn) { 
-                window.location.href = activeRole === 'admin' ? 'admin-dashboard.html' : 'dashboard.html'; 
-                return; 
-            }
-            
-            const btnText = btn.querySelector('.btn-text');
-            const btnIcon = btn.querySelector('.btn-icon');
-            const btnSpinner = btn.querySelector('.btn-spinner');
-            const originalText = btnText ? btnText.textContent : '';
-            
-            if (btnText) btnText.textContent = 'Requesting Auth...';
-            if (btnIcon) btnIcon.classList.add('hidden');
-            if (btnSpinner) btnSpinner.classList.remove('hidden');
-            btn.disabled = true;
-            btn.classList.add('opacity-80', 'cursor-wait');
-            
-            try {
-                // ... (rest of your original logic remains unchanged)
-                const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(identifier + password));
-                const hashHex = "0x" + Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-                sessionStorage.setItem('userHash', hashHex);
+                if (identifier !== '0xadmin_123' || password !== 'admin2026') {
+                    showToast('Unauthorized Access: Admin Credentials Required.', 'error');
+                    return;
+                }
 
-                let userName = identifier;
-                let backendOnline = false;
-                let validatedAbhaId = identifier;
+                const btn = form.querySelector('button[type="submit"]');
+                const btnText = btn?.querySelector('.btn-text');
+                const btnIcon = btn?.querySelector('.btn-icon');
+                const btnSpinner = btn?.querySelector('.btn-spinner');
+                const originalText = btnText ? btnText.textContent : 'Authenticate Node';
+
+                if (btn) {
+                    if (btnText) btnText.textContent = 'Verifying Node Protocol...';
+                    if (btnIcon) btnIcon.classList.add('hidden');
+                    if (btnSpinner) btnSpinner.classList.remove('hidden');
+                    btn.disabled = true;
+                    btn.classList.add('opacity-80', 'cursor-wait');
+                }
 
                 try {
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ abhaId: identifier, password: password, role: activeRole })
-                    });
-                    if (response.ok) {
-                        const data = await response.json();
-                        userName = data.name || identifier;
-                        validatedAbhaId = data.abhaId || identifier;
-                        backendOnline = true;
-                    }
-                } catch (networkErr) {
-                    console.warn('Backend unreachable:', networkErr.message);
-                }
+                    const otp = await showOtpModal();
+                    if (!otp) throw new Error('2FA Canceled');
+                    if (otp !== '123456') throw new Error('Invalid 2FA — use demo code: 123456');
 
-                const otp = await showOtpModal();
-                if (!otp) throw new Error('OTP Canceled');
-                if (otp !== '123456') throw new Error('Invalid OTP — use demo code: 123456');
-
-                if (!backendOnline || !userName || userName === identifier) {
-                    if (activeRole === 'admin') {
-                        userName = 'Administrator';
-                    } else {
-                        userName = identifier.includes('@') 
-                            ? identifier.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-                            : 'Patient ' + identifier.substring(0, Math.min(identifier.length, 8));
-                    }
-                }
-
-                sessionStorage.setItem('userRole', activeRole);
-                sessionStorage.setItem('abhaId', validatedAbhaId);
-                sessionStorage.setItem('userName', userName);
-                sessionStorage.setItem('pledgeName', userName);
-                sessionStorage.setItem('pledgeAbha', validatedAbhaId);
-
-                if (activeRole === 'admin') {
+                    const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(identifier + password));
+                    const hashHex = "0x" + Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+                    
+                    sessionStorage.setItem('userHash', hashHex);
+                    sessionStorage.setItem('userRole', 'admin');
+                    sessionStorage.setItem('userName', 'Administrator');
+                    
                     const jwtHeader = btoa(JSON.stringify({alg:'HS256',typ:'JWT'}));
                     const jwtPayload = btoa(JSON.stringify({
-                        sub: identifier,
-                        role: 'ADMIN',
-                        iat: Math.floor(Date.now()/1000),
-                        exp: Math.floor(Date.now()/1000) + 3600,
-                        iss: 'organchain-auth'
+                        sub: identifier, role: 'ADMIN',
+                        iat: Math.floor(Date.now()/1000), exp: Math.floor(Date.now()/1000) + 3600, iss: 'organchain-auth'
                     }));
-                    const jwtSig = hashHex.substring(2, 46);
-                    const adminJWT = jwtHeader + '.' + jwtPayload + '.' + jwtSig;
+                    const adminJWT = jwtHeader + '.' + jwtPayload + '.' + hashHex.substring(2, 46);
+                    
                     sessionStorage.setItem('adminJWT', adminJWT);
                     sessionStorage.setItem('adminLoginTime', new Date().toISOString());
-                }
 
-                if (activeRole === 'patient') {
-                    sessionStorage.setItem('pledgeEmail', identifier.includes('@') ? identifier : identifier + '@domain.com');
-                    sessionStorage.setItem('pledgePhone', '+91 98765 43210');
-                    sessionStorage.setItem('pledgeDob', '1995-08-15');
-                    sessionStorage.setItem('pledgeAge', '30');
-                    sessionStorage.setItem('pledgeGender', 'Female');
-                    sessionStorage.setItem('pledgeBloodGroup', 'O+');
-                    sessionStorage.setItem('pledgeStatus', 'CONFIRMED');
-                    sessionStorage.setItem('pledgeOrganBitmap', '127');
-                    sessionStorage.setItem('pledgeTxHash', '0x89b2c4f1a3e7d9c2b4f6a8e1d3c5b7a9e2f4d6c8e3f9a2b1c4d5e6f7a8b9c0d1');
-                    sessionStorage.setItem('documentSHA256', hashHex);
+                    showToast('Node Verified! Securing Terminal...', 'success');
+                    setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 1500);
+                } catch (err) {
+                    resetBtn(btn, btnText, btnIcon, btnSpinner, originalText);
+                    showToast(err.message, 'error');
                 }
-                
-                showToast('Authentication Successful! Redirecting...', 'success');
-                setTimeout(() => { 
-                    window.location.href = activeRole === 'admin' ? 'admin-dashboard.html' : 'dashboard.html'; 
-                }, 1000);
-            } catch (err) {
-                resetBtn(btn, btnText, btnIcon, btnSpinner, originalText);
-                showToast(err.message || 'Authentication failed. Check your credentials.', 'error');
+                return;
             }
         }
 
         async function connectWeb3(btn) {
-            // ... (your original connectWeb3 function remains unchanged)
             const btnText = btn.querySelector('.btn-text');
             const btnIcon = btn.querySelector('.btn-icon');
             const btnSpinner = btn.querySelector('.btn-spinner');
             const originalText = btnText ? btnText.textContent : '';
             
-            if (btnText) btnText.textContent = 'Requesting Auth...';
+            if (activeRole !== 'admin') {
+                showToast('Unauthorized Flow: Web3 is restricted to Admin nodes only.', 'error');
+                return;
+            }
+
+            if (btnText) btnText.textContent = 'Requesting Signature...';
             if (btnIcon) btnIcon.classList.add('hidden');
             if (btnSpinner) btnSpinner.classList.remove('hidden');
             btn.disabled = true;
@@ -399,10 +365,11 @@
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    showToast('Signature Verified', 'success');
+                    
+                    showToast('Metamask Identity Verified.', 'success');
                     sessionStorage.setItem('userRole', 'admin');
                     sessionStorage.setItem('userName', 'AIIMS-DELHI-01');
-                    setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 1000);  // Fixed to admin dashboard
+                    setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 1500);
                 } catch (error) {
                     resetBtn(btn, btnText, btnIcon, btnSpinner, originalText);
                     showToast('Connection rejected or failed.', 'error');

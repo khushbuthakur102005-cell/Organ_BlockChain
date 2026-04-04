@@ -57,7 +57,7 @@ files.forEach(file => {
     if (logoMatch) {
         let href = logoMatch[1];
         let adminCommand = logoMatch[0].includes('Admin Command Center');
-        let textMatch = adminCommand ? 'Admin Command Center' : 'OrganChain';
+        let textMatch = adminCommand ? 'Admin Command Center' : 'CyberCare';
 
         let standardizedAnchor = `<a href="${href}" class="flex items-center gap-x-3 transition-opacity hover:opacity-90 shrink-0 whitespace-nowrap">
                     <img src="images/primary-logo.png" alt="Logo" class="h-10 w-auto object-contain drop-shadow-md" />

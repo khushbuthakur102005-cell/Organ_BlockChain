@@ -7,17 +7,17 @@ let html = fs.readFileSync(targetFile, 'utf8');
 // 1. Update Title and Hero Text
 html = html.replace(
     '<title>Mission Architecture — Secure Organ Network</title>', 
-    '<title>About OrganChain — National Digital Infrastructure</title>'
+    '<title>About CyberCare — National Digital Infrastructure</title>'
 );
 
 html = html.replace(
     'Mission Architecture: <br class="hidden md:block" /><span class="font-medium" style="color:#10B981;">Securing the Future of Healthcare</span>',
-    'About OrganChain: <br class="hidden md:block" /><span class="font-medium" style="color:#10B981;">National Digital Infrastructure</span>'
+    'About CyberCare: <br class="hidden md:block" /><span class="font-medium" style="color:#10B981;">National Digital Infrastructure</span>'
 );
 
 html = html.replace(
     'Eliminating resource and trust failures by migrating organ allocation to cryptographically enforced smart contracts.',
-    'OrganChain serves as the decentralized backbone for the National Organ & Tissue Transplant Organization (NOTTO), ensuring trust, transparency, and equity in the gift of life.'
+    'CyberCare serves as the decentralized backbone for the National Organ & Tissue Transplant Organization (NOTTO), ensuring trust, transparency, and equity in the gift of life.'
 );
 
 // 2. Replace the entire Core Architecture block up through the footer start
@@ -35,7 +35,7 @@ if (startIndex !== -1 && endIndex !== -1) {
             <div class="pr-0 lg:pr-8">
                 <span class="text-emerald-500 font-bold tracking-widest uppercase text-xs mb-3 block">Institutional Mandate</span>
                 <h2 class="text-3xl lg:text-4xl font-light text-slate-900 tracking-tight mb-6 leading-tight">Implementing the <span class="font-medium">Digital India</span> Vision</h2>
-                <p class="text-lg text-slate-600 font-light leading-relaxed mb-6">Established to eliminate the administrative friction in organ procurement, OrganChain implements the Digital India vision within the framework of the Transplantation of Human Organs Act (THOA).</p>
+                <p class="text-lg text-slate-600 font-light leading-relaxed mb-6">Established to eliminate the administrative friction in organ procurement, CyberCare implements the Digital India vision within the framework of the Transplantation of Human Organs Act (THOA).</p>
                 <div class="h-1 w-20 bg-emerald-500 rounded-full"></div>
             </div>
             

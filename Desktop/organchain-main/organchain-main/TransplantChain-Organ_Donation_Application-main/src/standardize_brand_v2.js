@@ -8,8 +8,8 @@ files.forEach(file => {
     let content = fs.readFileSync(path.join(basePath, file), 'utf8');
     let modified = false;
 
-    // Much more resilient regex that looks for an anchor containing the primary-logo and ending with the word "OrganChain" or "Admin Command Center", followed by some tags and the </a>
-    const logoRegex = /<a[^>]*href="([^"]+)"[^>]*>[\s\S]*?<img src="images\/primary-logo\.png"[\s\S]*?(?:OrganChain|Admin Command Center)[^<]*<\/span>\s*(?:<\/span>\s*)?<\/a>/i;
+    // Much more resilient regex that looks for an anchor containing the primary-logo and ending with the word "CyberCare" or "Admin Command Center", followed by some tags and the </a>
+    const logoRegex = /<a[^>]*href="([^"]+)"[^>]*>[\s\S]*?<img src="images\/primary-logo\.png"[\s\S]*?(?:CyberCare|Admin Command Center)[^<]*<\/span>\s*(?:<\/span>\s*)?<\/a>/i;
     
     // Also support checking for just the text without the inner span ending differently
     const logoFallbackRegex = /<a[^>]*href="([^"]+)"[^>]*>[\s\S]*?<img src="images\/primary-logo\.png"[\s\S]*?<\/a>/i;
@@ -29,7 +29,7 @@ files.forEach(file => {
     if (match) {
         let href = match[1];
         let adminCommand = match[0].includes('Admin Command Center');
-        let textMatch = adminCommand ? 'Admin Command Center' : 'OrganChain';
+        let textMatch = adminCommand ? 'Admin Command Center' : 'CyberCare';
 
         let standardizedAnchor = `<a href="${href}" class="flex items-center gap-x-3 transition-opacity hover:opacity-90 shrink-0 whitespace-nowrap">
                     <img src="images/primary-logo.png" alt="Logo" class="h-10 w-auto object-contain drop-shadow-md" />

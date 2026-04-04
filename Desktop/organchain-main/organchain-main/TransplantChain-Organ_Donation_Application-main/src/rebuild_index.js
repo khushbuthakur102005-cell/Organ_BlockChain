@@ -19,7 +19,7 @@ if (startIndex !== -1 && endIndex !== -1) {
         <div class="max-w-[1400px] mx-auto px-6 relative z-10">
             <div class="text-center mb-20">
                 <h2 class="text-4xl font-extrabold text-white tracking-tight mb-4">The Life-Cycle of a Match</h2>
-                <p class="text-slate-400 font-medium text-lg max-w-2xl mx-auto">How OrganChain guarantees zero-discretion allocation through immutable transparency.</p>
+                <p class="text-slate-400 font-medium text-lg max-w-2xl mx-auto">How CyberCare guarantees zero-discretion allocation through immutable transparency.</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">

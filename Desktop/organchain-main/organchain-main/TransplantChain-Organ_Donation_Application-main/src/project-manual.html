@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OrganChain — Project Manual | Team Tech Knight | Hacksagon 2026</title>
+<title>CyberCare — Project Manual | Team Tech Knight | Hacksagon 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -172,7 +172,7 @@
       <div class="cover-meta-item"><div class="label">Chain ID</div><div class="value mono">#14,207,921</div></div>
     </div>
     <div class="divider-cover"></div>
-    <p style="color:#64748b;font-size:0.8rem;max-width:500px;margin:0 auto;">This document constitutes the official technical and architectural documentation for the OrganChain project. All specifications are THOA 1994 and NOTTO protocol compliant.</p>
+    <p style="color:#64748b;font-size:0.8rem;max-width:500px;margin:0 auto;">This document constitutes the official technical and architectural documentation for the CyberCare project. All specifications are THOA 1994 and NOTTO protocol compliant.</p>
   </div>
 </div>
 
@@ -196,8 +196,8 @@
   <div class="section">
     <div class="section-label">§ 1 — Executive Summary</div>
     <h2>The Mission: Ending Organ Waitlist Corruption</h2>
-    <p>India loses over <strong>500,000 lives annually</strong> to the organ transplantation crisis. The existing centralized registry, managed through paper-based and siloed digital systems, is vulnerable to data manipulation, favoritism, and jurisdictional delays. OrganChain was built to eliminate these failure modes by replacing <em>human discretion</em> with <em>cryptographic law</em>.</p>
-    <p>OrganChain is a full-stack decentralized application (dApp) that anchors every organ pledge, every donor-recipient match, and every administrative action to an immutable blockchain ledger. The system operates under three governing principles:</p>
+    <p>India loses over <strong>500,000 lives annually</strong> to the organ transplantation crisis. The existing centralized registry, managed through paper-based and siloed digital systems, is vulnerable to data manipulation, favoritism, and jurisdictional delays. CyberCare was built to eliminate these failure modes by replacing <em>human discretion</em> with <em>cryptographic law</em>.</p>
+    <p>CyberCare is a full-stack decentralized application (dApp) that anchors every organ pledge, every donor-recipient match, and every administrative action to an immutable blockchain ledger. The system operates under three governing principles:</p>
 
     <div class="card-grid">
       <div class="card">
@@ -219,7 +219,7 @@
 
     <div class="highlight">
       <h4>Project Scope</h4>
-      <p>OrganChain covers three user suites: a <strong>General Public Awareness Portal</strong>, a <strong>Patient Pledge &amp; Verification Pipeline</strong>, and an <strong>Admin Command Center</strong>. All three feed into a unified Ethereum-compatible smart contract registry.</p>
+      <p>CyberCare covers three user suites: a <strong>General Public Awareness Portal</strong>, a <strong>Patient Pledge &amp; Verification Pipeline</strong>, and an <strong>Admin Command Center</strong>. All three feed into a unified Ethereum-compatible smart contract registry.</p>
     </div>
   </div>
 
@@ -227,7 +227,7 @@
   <div class="section page-break">
     <div class="section-label">§ 2 — Section I</div>
     <h2>The Public Awareness Layer</h2>
-    <p>The public-facing portal serves as the top of the OrganChain funnel — converting uninformed citizens into legally registered organ donors. It consists of three primary components.</p>
+    <p>The public-facing portal serves as the top of the CyberCare funnel — converting uninformed citizens into legally registered organ donors. It consists of three primary components.</p>
 
     <h3 style="font-size:1.1rem;font-weight:700;color:#0F172A;margin:24px 0 10px;">2.1 — The Dynamic Hero Slider (index.html)</h3>
     <p>The homepage features a <strong>1-second interval automated image carousel</strong> cycling through three curated medical imagery slides, each carrying a high-impact message: "Pledge Now. Save a Life," "Blockchain-Verified Donors," and "Zero Corruption. Maximum Transparency." Each slide transitions using CSS opacity and z-index manipulation — no JavaScript frameworks required — ensuring maximum performance.</p>
@@ -299,7 +299,7 @@
 <span class="c-keyword">const</span> { cid } = <span class="c-keyword">await</span> ipfs.add(documentBuffer);
 <span class="c-comment">// → "QmZ9V2xK4uD7rW8bN3pL1fA6mJ5eY0cS4tG2hX7wQ9vR3k"</span>
 
-<span class="c-comment">// Step 3: Call registerPledge() on the OrganChain smart contract</span>
+<span class="c-comment">// Step 3: Call registerPledge() on the CyberCare smart contract</span>
 <span class="c-keyword">await</span> contract.registerPledge(
   sha256(abhaId),   <span class="c-comment">// Privacy-preserving donor ID</span>
   organs,            <span class="c-comment">// uint8[] bitmap</span>
@@ -316,7 +316,7 @@
   <div class="section page-break">
     <div class="section-label">§ 4 — Section III</div>
     <h2>The Admin Command Center</h2>
-    <p>The Admin Command Center is accessible exclusively to registered hospital nodes authenticated via <strong>MetaMask Web3 wallet signature</strong>. It provides real-time governance, infrastructure monitoring, and judicial oversight of the OrganChain network.</p>
+    <p>The Admin Command Center is accessible exclusively to registered hospital nodes authenticated via <strong>MetaMask Web3 wallet signature</strong>. It provides real-time governance, infrastructure monitoring, and judicial oversight of the CyberCare network.</p>
 
     <h3 style="font-size:1.1rem;font-weight:700;color:#0F172A;margin:24px 0 10px;">4.1 — Node Registry (node-registry.html)</h3>
     <p>The Node Registry displays real-time telemetry for all <strong>142 registered hospital server nodes</strong> across India. Each row represents a physical server co-located at a NOTTO-recognized transplant centre.</p>
@@ -348,7 +348,7 @@
   <div class="section page-break">
     <div class="section-label">§ 5 — Section IV</div>
     <h2>The Blockchain &amp; Smart Contract Engine</h2>
-    <p>OrganChain's core value proposition lives entirely in its smart contract layer — a self-executing Solidity program deployed on an Ethereum-compatible network. Once deployed, <strong>no human can alter its matching logic.</strong></p>
+    <p>CyberCare's core value proposition lives entirely in its smart contract layer — a self-executing Solidity program deployed on an Ethereum-compatible network. Once deployed, <strong>no human can alter its matching logic.</strong></p>
 
     <h3 style="font-size:1.1rem;font-weight:700;color:#0F172A;margin:24px 0 10px;">5.1 — The MATCH_EXEC Contract</h3>
     <p>The <code>executeMatch()</code> function is the most critical function in the system. It is triggered by an authorized hospital node after a donor reaches brain-stem death certification. The function:</p>
@@ -361,7 +361,7 @@
     </ol>
 
     <div class="code-block"><pre>
-<span class="c-comment">// OrganChain.sol — MATCH_EXEC Core Logic</span>
+<span class="c-comment">// CyberCare.sol — MATCH_EXEC Core Logic</span>
 <span class="c-keyword">function</span> <span class="c-func">executeMatch</span>(
     <span class="c-type">bytes32</span> donorAbhaHash,
     <span class="c-type">bytes32</span> recipientAbhaHash,
@@ -415,7 +415,7 @@
 
     <h3 style="font-size:1.1rem;font-weight:700;color:#0F172A;margin:24px 0 10px;">6.1 — Threat Model</h3>
     <table class="doc-table">
-      <thead><tr><th>Threat Vector</th><th>Attack Scenario</th><th>OrganChain Mitigation</th><th>Status</th></tr></thead>
+      <thead><tr><th>Threat Vector</th><th>Attack Scenario</th><th>CyberCare Mitigation</th><th>Status</th></tr></thead>
       <tbody>
         <tr><td>Waitlist Manipulation</td><td>Admin modifies recipient rank to favor a bribe</td><td>Ranks computed by on-chain deterministic algorithm. No admin write access.</td><td><span class="badge badge-green">Mitigated</span></td></tr>
         <tr><td>Fake Donor Pledge</td><td>User uploads unsigned/forged form</td><td>Witness EIP-712 signature + Medical Council ID verification via NMC API</td><td><span class="badge badge-amber">Partial (Backend)</span></td></tr>
@@ -427,7 +427,7 @@
     </table>
 
     <h3 style="font-size:1.1rem;font-weight:700;color:#0F172A;margin:24px 0 10px;">6.2 — The 99.8% Consensus Mechanism</h3>
-    <p>OrganChain uses a <strong>Proof of Authority (PoA)</strong> consensus model where only NOTTO-approved hospital nodes are permitted validators. This variant of PBFT (Practical Byzantine Fault Tolerance) ensures:</p>
+    <p>CyberCare uses a <strong>Proof of Authority (PoA)</strong> consensus model where only NOTTO-approved hospital nodes are permitted validators. This variant of PBFT (Practical Byzantine Fault Tolerance) ensures:</p>
 
     <div class="formula">
       Fault Tolerance &nbsp;=&nbsp; ⌊ (N − 1) / 3 ⌋ &nbsp; faulty nodes
@@ -451,7 +451,7 @@
     <div class="workflow">
       <div class="flow-step">
         <div class="flow-connector"><div class="flow-dot" style="background:#3b82f6;">01</div><div class="flow-line"></div></div>
-        <div class="flow-content"><div class="flow-title">Public Awareness (index.html)</div><div class="flow-desc">Citizen discovers OrganChain via the public portal. Reads NOTTO FAQs, legal documentation, and the "Life-Cycle of a Match" infographic. No data is collected at this stage.</div></div>
+        <div class="flow-content"><div class="flow-title">Public Awareness (index.html)</div><div class="flow-desc">Citizen discovers CyberCare via the public portal. Reads NOTTO FAQs, legal documentation, and the "Life-Cycle of a Match" infographic. No data is collected at this stage.</div></div>
       </div>
       <div class="flow-step">
         <div class="flow-connector"><div class="flow-dot" style="background:#8b5cf6;">02</div><div class="flow-line"></div></div>
@@ -475,7 +475,7 @@
       </div>
       <div class="flow-step">
         <div class="flow-connector"><div class="flow-dot" style="background:#0F172A;">07</div><div class="flow-line"></div></div>
-        <div class="flow-content"><div class="flow-title">Blockchain Commit — registerPledge()</div><div class="flow-desc">Smart contract call is signed by the patient's wallet. The pledge record (ABHA hash, document hash, organs, witness sig) is permanently written to the OrganChain ledger. The event PledgeRegistered is emitted.</div><div class="flow-hash">TX #14,207,921 — PledgeRegistered — Block: #14,207,921</div></div>
+        <div class="flow-content"><div class="flow-title">Blockchain Commit — registerPledge()</div><div class="flow-desc">Smart contract call is signed by the patient's wallet. The pledge record (ABHA hash, document hash, organs, witness sig) is permanently written to the CyberCare ledger. The event PledgeRegistered is emitted.</div><div class="flow-hash">TX #14,207,921 — PledgeRegistered — Block: #14,207,921</div></div>
       </div>
       <div class="flow-step">
         <div class="flow-connector"><div class="flow-dot" style="background:#dc2626;">08</div><div class="flow-line"></div></div>
@@ -501,7 +501,7 @@
       <div class="stack-item"><div class="stack-layer">Frontend</div><div class="stack-name">HTML5 + Tailwind CSS</div><div class="stack-purpose">Semantic UI with PostCSS utility classes</div></div>
       <div class="stack-item"><div class="stack-layer">Fonts &amp; Icons</div><div class="stack-name">Inter + JetBrains Mono</div><div class="stack-purpose">Google Fonts. Medical clinical aesthetic.</div></div>
       <div class="stack-item"><div class="stack-layer">Bundler</div><div class="stack-name">Webpack 4</div><div class="stack-purpose">CopyWebpackPlugin, webpack-dev-server, legacy OpenSSL</div></div>
-      <div class="stack-item"><div class="stack-layer">Blockchain</div><div class="stack-name">Solidity 0.8+</div><div class="stack-purpose">Smart contracts — OrganChain.sol</div></div>
+      <div class="stack-item"><div class="stack-layer">Blockchain</div><div class="stack-name">Solidity 0.8+</div><div class="stack-purpose">Smart contracts — CyberCare.sol</div></div>
       <div class="stack-item"><div class="stack-layer">Dev Chain</div><div class="stack-name">Ganache / Truffle</div><div class="stack-purpose">Local EVM for contract testing &amp; migration</div></div>
       <div class="stack-item"><div class="stack-layer">IPFS Layer</div><div class="stack-name">Web3.Storage / Pinata</div><div class="stack-purpose">Decentralized document storage for signed forms</div></div>
       <div class="stack-item"><div class="stack-layer">Auth / Identity</div><div class="stack-name">ABDM NHA API</div><div class="stack-purpose">ABHA ID verification — Government health stack</div></div>
@@ -552,8 +552,8 @@
 
 <!-- FOOTER -->
 <div class="doc-footer">
-  <p><strong>OrganChain</strong> — Technical Project Manual v1.0.0</p>
-  <p style="margin-top:6px;">Built by <strong>Team Tech Knight</strong> for Hacksagon 2026 &nbsp;·&nbsp; Governed by THOA 1994 &amp; NOTTO Protocol &nbsp;·&nbsp; Chain: OrganChain Mainnet</p>
+  <p><strong>CyberCare</strong> — Technical Project Manual v1.0.0</p>
+  <p style="margin-top:6px;">Built by <strong>Team Tech Knight</strong> for Hacksagon 2026 &nbsp;·&nbsp; Governed by THOA 1994 &amp; NOTTO Protocol &nbsp;·&nbsp; Chain: CyberCare Mainnet</p>
   <p style="margin-top:6px;font-size:0.72rem;color:#334155;">Block #14,207,921 &nbsp;·&nbsp; SHA-256: 0x89b2c4f1e8a7d63f5b2e91c4...f21a &nbsp;·&nbsp; NOTTO-ID: NTO-B-2026-887491</p>
 </div>
 

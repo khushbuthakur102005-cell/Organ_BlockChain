@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pledge Portal — OrganChain</title>
-    <meta name="description" content="Formally verify your organ donation pledge on the OrganChain national blockchain ledger.">
+    <title>Pledge Portal — CyberCare</title>
+    <meta name="description" content="Formally verify your organ donation pledge on the CyberCare national blockchain ledger.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -62,7 +62,7 @@
     <nav class="max-w-[1400px] w-full mx-auto px-6 h-full flex items-center justify-between">
         <a href="dashboard.html" class="flex items-center gap-x-3 transition-opacity hover:opacity-90 shrink-0 whitespace-nowrap">
                     <img src="images/primary-logo.png" alt="Logo" class="h-10 w-auto object-contain drop-shadow-md" />
-                    <span class="text-white font-extrabold tracking-tight text-xl flex items-center"><span class="font-light text-slate-300">OrganChain</span></span>
+                    <span class="text-white font-extrabold tracking-tight text-xl flex items-center"><span class="font-light text-slate-300">CyberCare</span></span>
                 </a>
         <div class="flex items-center gap-4 h-full">
             <ul class="flex items-center h-full gap-1 m-0 p-0 list-none hidden md:flex">
@@ -91,7 +91,7 @@
     <div class="mb-10 fade-up">
         <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-2 flex items-center gap-2">
             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-            OrganChain Pledge Portal
+            CyberCare Pledge Portal
         </p>
         <h1 class="text-4xl font-extrabold text-slate-950 tracking-tight mb-2">Organ Pledge Verification</h1>
         <p class="text-slate-500 font-medium text-base max-w-2xl">Complete all four phases to cryptographically register your organ donation pledge on the national blockchain ledger. This is a legally binding process governed under THOA, 1994.</p>
@@ -344,7 +344,7 @@
                 </div>
 
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
-                    <p class="text-xs text-slate-500 font-medium">By specifying these organs, you authorize the OrganChain network to match your profile against national recipients under THOA regulation. Your next of kin will be notified for final authorisation.</p>
+                    <p class="text-xs text-slate-500 font-medium">By specifying these organs, you authorize the CyberCare network to match your profile against national recipients under THOA regulation. Your next of kin will be notified for final authorisation.</p>
                 </div>
 
                 <div class="flex gap-3">
@@ -412,7 +412,7 @@
             <div class="phase-panel bg-white rounded-2xl border border-slate-200 shadow-lg p-12 text-center" id="phase-loading">
                 <div class="w-20 h-20 border-4 border-slate-100 border-t-emerald-500 rounded-full animate-spin mx-auto mb-6"></div>
                 <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">Generating Cryptographic Proof...</h2>
-                <p class="text-slate-500 font-medium text-sm max-w-md mx-auto">Broadcasting pledge to OrganChain nodes. Computing SHA-256 fingerprint and anchoring to block. This may take a moment.</p>
+                <p class="text-slate-500 font-medium text-sm max-w-md mx-auto">Broadcasting pledge to CyberCare nodes. Computing SHA-256 fingerprint and anchoring to block. This may take a moment.</p>
                 <div class="mt-6 bg-slate-900 rounded-xl p-4 max-w-sm mx-auto">
                     <p class="mono text-xs text-emerald-400 animate-pulse">▶ Connecting to NOTTO registry node...</p>
                     <p class="mono text-xs text-slate-500 mt-1">▶ Validating witness signatures...</p>
@@ -431,7 +431,7 @@
                         Pledge Confirmed — On-Chain
                     </span>
                     <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">You are a Verified Organ Donor</h2>
-                    <p class="text-slate-500 font-medium max-w-lg mx-auto">Your pledge has been cryptographically anchored to the OrganChain network and synchronized with the national NOTTO registry.</p>
+                    <p class="text-slate-500 font-medium max-w-lg mx-auto">Your pledge has been cryptographically anchored to the CyberCare network and synchronized with the national NOTTO registry.</p>
                 </div>
 
                 <!-- Transaction Card -->
@@ -460,7 +460,7 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-xs text-slate-500 font-bold">Network</span>
-                                <span class="mono text-white font-bold text-sm">OrganChain · Mainnet</span>
+                                <span class="mono text-white font-bold text-sm">CyberCare · Mainnet</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-xs text-slate-500 font-bold">NOTTO ID</span>
@@ -693,7 +693,7 @@
 
         // Collect data
         const abhaId = sessionStorage.getItem('abhaId') || 'ABHA-DEFAULT';
-        const ipfsCid = sessionStorage.getItem('ipfsCid') || 'QmMockCidOrganChain';
+        const ipfsCid = sessionStorage.getItem('ipfsCid') || 'QmMockCidCyberCare';
         const documentHash = sessionStorage.getItem('documentSHA256') || '0x0';
         const abhaBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(abhaId));
         const abhaHash = "0x" + Array.from(new Uint8Array(abhaBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -791,7 +791,7 @@
             doc.setTextColor(16, 185, 129);
             doc.setFontSize(20);
             doc.setFont('helvetica', 'bold');
-            doc.text('OrganChain', 15, 18);
+            doc.text('CyberCare', 15, 18);
             doc.setTextColor(148, 163, 184);
             doc.setFontSize(7);
             doc.setFont('helvetica', 'normal');
@@ -823,7 +823,7 @@
             doc.setFontSize(9);
             doc.setFont('helvetica', 'normal');
             doc.text('This is to certify that the following individual has voluntarily registered as an organ donor', 105, 82, { align: 'center' });
-            doc.text('on the OrganChain National Blockchain Ledger under the provisions of THOA, 1994.', 105, 87, { align: 'center' });
+            doc.text('on the CyberCare National Blockchain Ledger under the provisions of THOA, 1994.', 105, 87, { align: 'center' });
 
             // ─── Donor details box ───
             doc.setFillColor(240, 253, 244);
@@ -867,7 +867,7 @@
             doc.setTextColor(71, 85, 105);
             doc.setFontSize(6);
             doc.setFont('helvetica', 'normal');
-            doc.text('This hash is immutable and verifiable on-chain at organchain.gov.in/verify', 30, 192);
+            doc.text('This hash is immutable and verifiable on-chain at cybercare.gov.in/verify', 30, 192);
 
             // ─── Legal clause ───
             doc.setTextColor(71, 85, 105);
@@ -898,11 +898,11 @@
             doc.rect(0, 272, 210, 2, 'F');
             doc.setTextColor(71, 85, 105);
             doc.setFontSize(6.5);
-            doc.text('OrganChain — Secured on Ethereum L2  |  organchain.gov.in  |  NOTTO Reg. No: ' + certNo, 105, 282, { align: 'center' });
+            doc.text('CyberCare — Secured on Ethereum L2  |  cybercare.gov.in  |  NOTTO Reg. No: ' + certNo, 105, 282, { align: 'center' });
             doc.setTextColor(51, 65, 85);
-            doc.text('This is a computer-generated certificate. Verify authenticity at organchain.gov.in/verify', 105, 288, { align: 'center' });
+            doc.text('This is a computer-generated certificate. Verify authenticity at cybercare.gov.in/verify', 105, 288, { align: 'center' });
 
-            doc.save('OrganChain_Medical_License_' + (abhaId || 'Donor').replace(/[\s-]/g, '_') + '.pdf');
+            doc.save('CyberCare_Medical_License_' + (abhaId || 'Donor').replace(/[\s-]/g, '_') + '.pdf');
         }
 
         if (typeof window.jspdf !== 'undefined') {
@@ -967,7 +967,7 @@
         doc.setTextColor(16, 185, 129);
         doc.setFontSize(9);
         doc.setFont('helvetica', 'bold');
-        doc.text('ORGANCHAIN', 8, 12);
+        doc.text('CYBERCARE', 8, 12);
         doc.setTextColor(148, 163, 184); // slate-400
         doc.setFontSize(6);
         doc.setFont('helvetica', 'normal');
@@ -1052,11 +1052,11 @@
         doc.line(8, 78, 100, 78);
         doc.setTextColor(71, 85, 105); // slate-600
         doc.setFontSize(4.5);
-        doc.text('This card is cryptographically secured on the OrganChain Ethereum L2 Network.', 8, 83);
+        doc.text('This card is cryptographically secured on the CyberCare Ethereum L2 Network.', 8, 83);
         doc.text('Issued: ' + new Date().toLocaleDateString() + '  |  Wallet: ' + (userHash.substring(0, 16) + '...'), 8, 87);
 
         // Save
-        doc.save('OrganChain_Donor_Card_' + abhaId.replace(/\s/g, '') + '.pdf');
+        doc.save('CyberCare_Donor_Card_' + abhaId.replace(/\s/g, '') + '.pdf');
     }
 </script>
 

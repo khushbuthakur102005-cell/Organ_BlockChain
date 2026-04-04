@@ -22,7 +22,7 @@ if (srcHtml.includes(splitMarker) && destHtml.includes(splitMarker)) {
     // The `<title>` might have been updated previously, so let's match the <title> tag precisely
     destHtml = destHtml.replace(
         '<title>Mission Architecture — Secure Organ Network</title>',
-        '<title>About OrganChain — National Digital Infrastructure</title>'
+        '<title>About CyberCare — National Digital Infrastructure</title>'
     );
 
     fs.writeFileSync(destPath, destHtml);

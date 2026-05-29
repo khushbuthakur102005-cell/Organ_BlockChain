@@ -237,11 +237,11 @@
                 </div>
 
                 <div class="flex gap-3 justify-center mb-6 hidden" id="mlScanDiv">
-                    <button onclick="scanAndMaskPII()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow transition-all active:scale-95 flex items-center gap-2">
+                    <button id="scanBtn" onclick="scanAndMaskPII()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl shadow transition-all active:scale-95 flex items-center gap-2">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                         Scan & Mask PII via AI System
                     </button>
-                    <button onclick="commitToIpfs()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl shadow transition-all active:scale-95 flex items-center gap-2">
+                    <button id="ipfsBtn" onclick="commitToIpfs()" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl shadow transition-all active:scale-95 flex items-center gap-2">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                         Upload to IPFS Database
                     </button>
@@ -572,6 +572,11 @@
 
     async function scanAndMaskPII() {
         if(!window.selectedFile) return;
+        const btn = document.getElementById('scanBtn');
+        const originalText = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Processing...';
         document.getElementById('uploadedFileName').innerHTML = 'Analyzing document via AI... <span class="animate-pulse">██████</span>';
         try {
             const formData = new FormData();
@@ -609,11 +614,19 @@
                 alert('AI Scan Failed');
                 document.getElementById('uploadedFileName').textContent = window.selectedFile.name;
             }
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
         }
     }
 
     async function commitToIpfs() {
         if(!window.selectedFile) return;
+        const btn = document.getElementById('ipfsBtn');
+        const originalText = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Uploading...';
         document.getElementById('uploadedFileName').textContent = 'Uploading encrypted file to IPFS...';
         try {
             // Generate SHA-256 hash client-side
@@ -653,6 +666,9 @@
         } catch(e) {
             alert('IPFS upload error: ' + e.message);
             document.getElementById('uploadedFileName').textContent = window.selectedFile.name;
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
         }
     }
 

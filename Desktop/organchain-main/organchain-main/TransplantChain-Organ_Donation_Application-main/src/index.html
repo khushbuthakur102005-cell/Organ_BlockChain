@@ -25,7 +25,35 @@
         .accordion-item.active .accordion-content { opacity: 1; max-height: 500px; /* arbitrary large value */ }
         .accordion-icon { transition: transform 0.3s ease; }
         .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        /* Accessibility & Interaction Styles */
+        .organ-donation-card, .primary-btn {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, outline 0.2s ease;
+        }
+
+        .organ-donation-card:hover, .organ-donation-card:focus-visible,
+        .primary-btn:hover, .primary-btn:focus-visible {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .organ-donation-card:focus-visible, .primary-btn:focus-visible {
+            outline: 3px solid #10b981;
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
     </style>
+    
+
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-white-50 font-sans text-slate-800 antialiased selection:bg-emerald-500/30 min-h-screen flex flex-col">
@@ -140,9 +168,9 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">
                 <!-- Step 1 -->
-                <div class="bg-slate-900 rounded-[20px] shadow-2xl border border-emerald-500/20 text-center transition-all hover:-translate-y-2 hover:shadow-[0_15px_40px_-10px_rgba(16,185,129,0.3)] hover:border-emerald-500/50 duration-500 relative overflow-hidden group">
+                <div class="bg-slate-900 organ-donation-card rounded-[20px] shadow-2xl border border-emerald-500/20 text-center transition-all hover:-translate-y-2 hover:shadow-[0_15px_40px_-10px_rgba(16,185,129,0.3)] hover:border-emerald-500/50 duration-500 relative overflow-hidden group">
                     <div class="w-full h-56 relative overflow-hidden border-b border-slate-800">
-                        <img src="images/lifecycle_pledge.png" alt="Secure Pledging" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out">
+                        <img src="images/lifecycle_pledge.png" alt="" aria-hidden="true" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-emerald-900/10 mix-blend-overlay"></div>
                     </div>
                     <div class="p-10 pt-8 relative z-10 flex flex-col h-[180px]">
@@ -152,9 +180,9 @@
                 </div>
 
                 <!-- Step 2 -->
-                <div class="bg-slate-900 rounded-[20px] shadow-2xl border border-emerald-500/20 text-center transition-all hover:-translate-y-2 hover:shadow-[0_15px_40px_-10px_rgba(16,185,129,0.3)] hover:border-emerald-500/50 duration-500 relative overflow-hidden group">
+                <div class="bg-slate-900 organ-donation-card rounded-[20px] shadow-2xl border border-emerald-500/20 text-center transition-all hover:-translate-y-2 hover:shadow-[0_15px_40px_-10px_rgba(16,185,129,0.3)] hover:border-emerald-500/50 duration-500 relative overflow-hidden group">
                     <div class="w-full h-56 relative overflow-hidden border-b border-slate-800">
-                        <img src="images/lifecycle_matrix.png" alt="Fair Allocation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out">
+                        <img src="images/lifecycle_matrix.png" alt="" aria-hidden="true" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-emerald-900/10 mix-blend-overlay"></div>
                     </div>
                     <div class="p-10 pt-8 relative z-10 flex flex-col h-[180px]">
@@ -164,9 +192,9 @@
                 </div>
 
                 <!-- Step 3 -->
-                <div class="bg-slate-900 rounded-[20px] shadow-2xl border border-emerald-500/20 text-center transition-all hover:-translate-y-2 hover:shadow-[0_15px_40px_-10px_rgba(16,185,129,0.3)] hover:border-emerald-500/50 duration-500 relative overflow-hidden group">
+                <div class="bg-slate-900 organ-donation-card rounded-[20px] shadow-2xl border border-emerald-500/20 text-center transition-all hover:-translate-y-2 hover:shadow-[0_15px_40px_-10px_rgba(16,185,129,0.3)] hover:border-emerald-500/50 duration-500 relative overflow-hidden group">
                     <div class="w-full h-56 relative overflow-hidden border-b border-slate-800">
-                        <img src="images/lifecycle_audit.png" alt="Traceable Finalization" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out">
+                        <img src="images/lifecycle_audit.png" alt="" aria-hidden="true" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-emerald-900/10 mix-blend-overlay"></div>
                     </div>
                     <div class="p-10 pt-8 relative z-10 flex flex-col h-[180px]">
